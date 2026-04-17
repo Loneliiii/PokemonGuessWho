@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon - Guess Who?</title>
+    
+    <script src="pokemon_de.js"></script>
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,53 +22,18 @@
         }
         
         .pokedex {
-            background-color: #dc0a2d;
-            width: 100%; 
-            max-width: 1600px;
-            height: 100%; 
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2), 5px 10px 20px rgba(0,0,0,0.5);
-            border: 4px solid #8b0000;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
+            background-color: #dc0a2d; width: 100%; max-width: 1600px; height: 100%; border-radius: 15px; padding: 15px;
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2), 5px 10px 20px rgba(0,0,0,0.5); border: 4px solid #8b0000; box-sizing: border-box; display: flex; flex-direction: column;
         }
 
-        .lights {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-shrink: 0; 
-        }
-
-        .light-main {
-            width: 50px;
-            height: 50px;
-            background-color: #28aafa;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 10px #28aafa, inset -5px -5px 10px rgba(0,0,0,0.3);
-        }
-
-        .light-small {
-            width: 15px; height: 15px; border-radius: 50%; border: 2px solid #333; box-shadow: inset -2px -2px 5px rgba(0,0,0,0.3);
-        }
-        .light-red { background-color: #ff2c2c; }
-        .light-yellow { background-color: #fdfd28; }
-        .light-green { background-color: #28fd28; }
+        .lights { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; flex-shrink: 0; }
+        .light-main { width: 50px; height: 50px; background-color: #28aafa; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 10px #28aafa, inset -5px -5px 10px rgba(0,0,0,0.3); }
+        .light-small { width: 15px; height: 15px; border-radius: 50%; border: 2px solid #333; box-shadow: inset -2px -2px 5px rgba(0,0,0,0.3); }
+        .light-red { background-color: #ff2c2c; } .light-yellow { background-color: #fdfd28; } .light-green { background-color: #28fd28; }
 
         .screen-container {
-            background-color: #1a252f; 
-            border-radius: 10px;
-            padding: 15px;
-            border: 4px solid #111;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            flex-grow: 1; 
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            background-color: #1a252f; border-radius: 10px; padding: 15px; border: 4px solid #111;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8); flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;
         }
 
         .screen-header { display: flex; justify-content: flex-end; margin-bottom: 10px; flex-shrink: 0; }
@@ -102,13 +70,7 @@
 
         /* Game Header (Target + Rule) */
         .game-info-container {
-            display: none; /* Flex when active */
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 15px;
-            flex-shrink: 0;
-            width: 100%;
+            display: none; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 15px; flex-shrink: 0; width: 100%;
         }
 
         .target-container {
@@ -135,9 +97,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; transition: transform 0.1s, border-color 0.1s; overflow: hidden;
         }
         .card:hover { border-color: #e74c3c; transform: scale(1.03); z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
-        
         .card img { max-width: 95%; height: auto; max-height: 65%; object-fit: contain; flex-shrink: 1; }
-        
         .card.eliminated { opacity: 0.25; filter: grayscale(100%) brightness(0.5); background-color: #e9ecef; border-color: #555; }
         
         .name { font-weight: bold; text-transform: capitalize; font-size: clamp(10px, 1.8vmin, 18px); color: #222; margin: 4px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
@@ -166,6 +126,14 @@
                 <h1>Who's that Pokémon?</h1>
                 <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Enter a shared seed to play on the exact same board!</p>
                 
+                <div class="control-group">
+                    <label class="main-label" for="startLanguage">Language / Sprache</label>
+                    <select id="startLanguage">
+                        <option value="de" selected>Deutsch (German)</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+
                 <div class="control-group">
                     <label class="main-label" for="startSeed">Secret Word / Seed</label>
                     <input type="text" id="startSeed" placeholder="e.g. Charizard99">
@@ -205,11 +173,11 @@
 
             <div id="gameInfoContainer" class="game-info-container">
                 <div class="target-container">
-                    <h2>You are:</h2>
+                    <h2 id="targetTitle">You are:</h2>
                     <div id="targetInfo" style="display: flex; align-items: center; gap: 10px;"></div>
                 </div>
                 <div class="rule-container">
-                    <h2>Special Rule</h2>
+                    <h2 id="ruleTitle">Special Rule</h2>
                     <div id="ruleText" class="rule-text"></div>
                 </div>
             </div>
@@ -224,6 +192,14 @@
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 style="margin-top: 0; color: #333; text-align: center;">Game Settings</h2>
             
+            <div class="control-group">
+                <label class="main-label" for="modalLanguage">Language / Sprache</label>
+                <select id="modalLanguage">
+                    <option value="de" selected>Deutsch (German)</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
             <div class="control-group">
                 <label class="main-label" for="modalSeed">Secret Word / Seed</label>
                 <input type="text" id="modalSeed">
@@ -256,16 +232,36 @@
     <script>
         let currentTotalPokemon = 0;
 
-        // --- Custom Game Rules ---
-        const gameRules = [
-            "Normal Game (No restrictions) ✅",
-            "No questions about Colors! 🎨",
-            "No questions about Types! 🔥💧",
-            "No questions about Evolutions! 🔄",
-            "No questions about Body Shape (Arms, Legs, Wings)! 🦵",
-            "No questions about the Generation/Region! 🌍",
-            "No questions about the starting letter! 🔠"
-        ];
+        // --- Übersetzungstabelle für Typen ---
+        const typesDE = {
+            "normal": "Normal", "fighting": "Kampf", "flying": "Flug", "poison": "Gift",
+            "ground": "Boden", "rock": "Gestein", "bug": "Käfer", "ghost": "Geist",
+            "steel": "Stahl", "fire": "Feuer", "water": "Wasser", "grass": "Pflanze",
+            "electric": "Elektro", "psychic": "Psycho", "ice": "Eis", "dragon": "Drache",
+            "dark": "Unlicht", "fairy": "Fee"
+        };
+
+        // --- Custom Game Rules (Mehrsprachig) ---
+        const gameRules = {
+            "en": [
+                "Normal Game (No restrictions) ✅",
+                "No questions about Colors! 🎨",
+                "No questions about Types! 🔥💧",
+                "No questions about Evolutions! 🔄",
+                "No questions about Body Shape! 🦵",
+                "No questions about the Region/Generation! 🌍",
+                "No questions about the starting letter! 🔠"
+            ],
+            "de": [
+                "Normales Spiel (Keine Einschränkungen) ✅",
+                "Keine Fragen zur Farbe! 🎨",
+                "Keine Fragen zu den Typen! 🔥💧",
+                "Keine Fragen zu Entwicklungen! 🔄",
+                "Keine Fragen zur Körperform (Arme, Beine etc.)! 🦵",
+                "Keine Fragen zur Region/Generation! 🌍",
+                "Keine Fragen zum Anfangsbuchstaben! 🔠"
+            ]
+        };
 
         function openModal() { document.getElementById('settingsModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('settingsModal').style.display = 'none'; }
@@ -342,14 +338,19 @@
             const seedId = isFromModal ? 'modalSeed' : 'startSeed';
             const countId = isFromModal ? 'modalPokemonCount' : 'startPokemonCount';
             const genContainerId = isFromModal ? 'modalGenCheckboxes' : 'startGenCheckboxes';
+            const langId = isFromModal ? 'modalLanguage' : 'startLanguage';
 
             const seed = document.getElementById(seedId).value;
             const totalPokemon = parseInt(document.getElementById(countId).value);
+            const lang = document.getElementById(langId).value;
 
+            // Sync Inputs
             document.getElementById('modalSeed').value = seed;
             document.getElementById('startSeed').value = seed;
             document.getElementById('modalPokemonCount').value = totalPokemon;
             document.getElementById('startPokemonCount').value = totalPokemon;
+            document.getElementById('modalLanguage').value = lang;
+            document.getElementById('startLanguage').value = lang;
             syncCheckboxes(genContainerId, isFromModal ? 'startGenCheckboxes' : 'modalGenCheckboxes');
 
             currentTotalPokemon = totalPokemon;
@@ -368,7 +369,7 @@
             });
 
             if (totalPokemon > validIdsPool.length) { 
-                alert(`You selected ${totalPokemon} Pokémon, but the chosen regions only have ${validIdsPool.length} Pokémon in total. Please select more regions or a smaller grid!`); 
+                alert(`Error: Not enough Pokémon in the selected regions for the grid size.`); 
                 return; 
             }
 
@@ -384,10 +385,13 @@
             const seedHash = cyrb128(seed);
             const rand = sfc32(seedHash[0], seedHash[1], seedHash[2], seedHash[3]);
 
-            // --- Setze die gemeinsame, zufällige Spielregel ---
-            // Da wir rand() nutzen, bekommt jeder mit demselben Seed auch dieselbe Regel!
-            const ruleIndex = Math.floor(rand() * gameRules.length);
-            document.getElementById('ruleText').textContent = gameRules[ruleIndex];
+            // UI Texte für die Spielinfo-Kopfzeile übersetzen
+            document.getElementById('targetTitle').innerText = lang === 'de' ? 'Dein Pokémon:' : 'You are:';
+            document.getElementById('ruleTitle').innerText = lang === 'de' ? 'Sonderregel' : 'Special Rule';
+            
+            // Regel generieren
+            const ruleIndex = Math.floor(rand() * gameRules[lang].length);
+            document.getElementById('ruleText').textContent = gameRules[lang][ruleIndex];
 
             const selectedIds = new Set();
             while(selectedIds.size < totalPokemon) {
@@ -395,7 +399,7 @@
                 selectedIds.add(validIdsPool[randomIndex]);
             }
 
-            await buildBoard(Array.from(selectedIds));
+            await buildBoard(Array.from(selectedIds), lang);
             
             document.getElementById('loading').style.display = 'none';
             document.getElementById('gameInfoContainer').style.display = 'flex';
@@ -403,7 +407,7 @@
             calculateOptimalGrid(totalPokemon);
         }
 
-        async function buildBoard(ids) {
+        async function buildBoard(ids, lang) {
             const board = document.getElementById('board');
             
             const promises = ids.map(id => fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(res => res.json()));
@@ -419,24 +423,37 @@
                 
                 const name = document.createElement('div');
                 name.className = 'name';
-                name.textContent = pokemon.name;
+                
+                // Namensauswahl (Deutsch oder Englisch)
+                const pokeName = (lang === 'de' && typeof pokemonNamesDE !== 'undefined' && pokemonNamesDE[pokemon.id]) 
+                                 ? pokemonNamesDE[pokemon.id] 
+                                 : pokemon.name;
+                name.textContent = pokeName;
 
                 const types = document.createElement('div');
                 types.className = 'types';
-                types.textContent = pokemon.types.map(t => t.type.name).join(' / ');
+                // Typen-Übersetzung
+                types.textContent = pokemon.types.map(t => {
+                    if (lang === 'de') return typesDE[t.type.name] || t.type.name;
+                    return t.type.name;
+                }).join(' / ');
 
                 card.appendChild(img); card.appendChild(name); card.appendChild(types);
                 board.appendChild(card);
             });
 
-            // Dein Target-Pokémon (Bleibt lokal random, damit die Spieler nicht dasselbe bekommen)
+            // Target Pokémon
             const myTarget = pokemons[Math.floor(Math.random() * pokemons.length)];
             const targetInfo = document.getElementById('targetInfo');
             const targetImg = myTarget.sprites.front_default || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
             
+            const targetName = (lang === 'de' && typeof pokemonNamesDE !== 'undefined' && pokemonNamesDE[myTarget.id]) 
+                               ? pokemonNamesDE[myTarget.id] 
+                               : myTarget.name;
+
             targetInfo.innerHTML = `
-                <img src="${targetImg}" alt="${myTarget.name}" style="width: 45px; height: 45px; background: white; border-radius: 50%; border: 2px solid white;">
-                <div class="name" style="font-size: 18px; margin: 0; color: white; text-shadow: none;">${myTarget.name.toUpperCase()}</div>
+                <img src="${targetImg}" alt="${targetName}" style="width: 45px; height: 45px; background: white; border-radius: 50%; border: 2px solid white;">
+                <div class="name" style="font-size: 18px; margin: 0; color: white; text-shadow: none;">${targetName.toUpperCase()}</div>
             `;
         }
     </script>
