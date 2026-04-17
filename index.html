@@ -10,15 +10,8 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2c3e50;
-            color: #333;
-            margin: 0;
-            padding: 2vmin;
-            height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            overflow: hidden; 
+            background-color: #2c3e50; color: #333; margin: 0; padding: 2vmin; height: 100vh;
+            box-sizing: border-box; display: flex; justify-content: center; overflow: hidden; 
         }
         
         .pokedex {
@@ -41,67 +34,73 @@
         /* Start Screen */
         .start-screen {
             background: #fff; padding: 20px 30px; border-radius: 12px; max-width: 550px; margin: auto; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; overflow-y: auto; max-height: 100%;
         }
         .start-screen h1 { margin-top: 0; color: #2c3e50; font-size: 24px; }
 
-        /* Forms & Inputs */
         .control-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; text-align: left; }
         .control-group label.main-label { font-size: 12px; font-weight: bold; color: #555; text-transform: uppercase; }
         input[type="text"], select { padding: 8px 10px; font-size: 14px; border: 2px solid #e0e0e0; border-radius: 6px; background-color: #fafafa; }
         
-        .checkbox-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #e0e0e0;
-        }
-        .checkbox-grid label { font-size: 13px; font-weight: normal; display: flex; align-items: center; gap: 6px; cursor: pointer; color: #333; text-transform: none; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #e0e0e0; }
+        .checkbox-grid label { font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; color: #333; }
 
         .button-group { display: flex; gap: 10px; margin-top: 20px; }
         button { padding: 10px 15px; font-size: 14px; background-color: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; }
         button:hover { background-color: #2980b9; }
         button.settings-btn { background-color: #ecf0f1; color: #333; flex: none; display: none; border: 2px solid #bdc3c7; padding: 6px 12px;}
-        button.settings-btn:hover { background-color: #bdc3c7; }
         button.random-btn { background-color: #e67e22; }
-        button.random-btn:hover { background-color: #d35400; }
 
         /* Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
 
-        /* Game Header (Target + Rule) */
-        .game-info-container {
-            display: none; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 15px; flex-shrink: 0; width: 100%;
-        }
-
-        .target-container {
-            background: linear-gradient(135deg, #f1c40f, #f39c12); padding: 8px 15px; border-radius: 8px;
-            text-align: center; border: 2px solid #d68910; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; display: flex; align-items: center; justify-content: center; gap: 15px;
-        }
+        /* Game Header */
+        .game-info-container { display: none; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 15px; flex-shrink: 0; width: 100%; }
+        .target-container { background: linear-gradient(135deg, #f1c40f, #f39c12); padding: 8px 15px; border-radius: 8px; text-align: center; border: 2px solid #d68910; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; display: flex; align-items: center; justify-content: center; gap: 15px; }
         .target-container h2 { margin: 0; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); text-transform: uppercase; }
-
-        .rule-container {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 8px 15px; border-radius: 8px;
-            text-align: center; border: 2px solid #732d91; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 250px;
-        }
+        .rule-container { background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 8px 15px; border-radius: 8px; text-align: center; border: 2px solid #732d91; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 250px; }
         .rule-container h2 { margin: 0 0 4px 0; font-size: 11px; text-transform: uppercase; color: #e8d4f0; letter-spacing: 1px;}
         .rule-text { font-size: 15px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
+        /* Main Game Layout (Grid + Notes) */
+        .main-game-area { display: none; flex-grow: 1; gap: 15px; min-height: 0; height: 100%; width: 100%; }
+
         /* Grid */
         :root { --cols: 6; --rows: 4; }
-        .grid {
-            display: none; grid-template-columns: repeat(var(--cols), 1fr); grid-template-rows: repeat(var(--rows), 1fr); gap: 1vmin; flex-grow: 1; min-height: 0; height: 100%; width: 100%;
-        }
+        .grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-template-rows: repeat(var(--rows), 1fr); gap: 1vmin; flex-grow: 1; min-height: 0; height: 100%; }
         
         .card {
-            background: #ffffff; border-radius: 8px; padding: 0.5vmin; text-align: center; border: 3px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; transition: transform 0.1s, border-color 0.1s; overflow: hidden;
+            background: #ffffff; border-radius: 8px; padding: 0.5vmin 1vmin; text-align: center; border: 3px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: space-between; width: 100%; height: 100%; box-sizing: border-box; transition: transform 0.1s, border-color 0.1s; overflow: hidden; position: relative;
         }
         .card:hover { border-color: #e74c3c; transform: scale(1.03); z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
-        .card img { max-width: 95%; height: auto; max-height: 65%; object-fit: contain; flex-shrink: 1; }
         .card.eliminated { opacity: 0.25; filter: grayscale(100%) brightness(0.5); background-color: #e9ecef; border-color: #555; }
         
-        .name { font-weight: bold; text-transform: capitalize; font-size: clamp(10px, 1.8vmin, 18px); color: #222; margin: 4px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-        .types { font-size: clamp(8px, 1.2vmin, 13px); color: #fff; background: #7f8c8d; padding: 2px 6px; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 95%; }
+        /* Das eigene Pokémon leuchtet! */
+        .card.my-target { border: 4px solid #f1c40f; box-shadow: 0 0 15px #f1c40f, inset 0 0 10px rgba(241,196,15,0.3); }
+
+        /* Neue Card Infos */
+        .card-header { display: flex; justify-content: space-between; width: 100%; font-size: clamp(8px, 1vmin, 11px); margin-bottom: 2px; color: #666; font-weight: bold; }
+        .gen-badge { background: #ecf0f1; padding: 2px 4px; border-radius: 4px; }
+        .id-link { color: #3498db; text-decoration: none; }
+        .id-link:hover { text-decoration: underline; color: #e74c3c; }
+
+        .card img { max-width: 95%; height: auto; max-height: 50%; object-fit: contain; flex-shrink: 1; }
+        .name { font-weight: bold; text-transform: capitalize; font-size: clamp(10px, 1.5vmin, 16px); color: #222; margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .types { font-size: clamp(8px, 1.1vmin, 12px); color: #fff; background: #7f8c8d; padding: 2px 6px; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 95%; }
+        .card-size { font-size: clamp(8px, 1vmin, 11px); color: #7f8c8d; margin-top: 2px; }
+
+        /* Notizfeld */
+        .notes-container {
+            display: flex; flex-direction: column; width: 220px; flex-shrink: 0; background: #2c3e50; border-radius: 8px; padding: 10px; border: 2px solid #34495e; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .notes-container h3 { margin: 0 0 10px 0; color: #fff; font-size: 14px; text-transform: uppercase; text-align: center; letter-spacing: 1px;}
+        .notes-container textarea {
+            flex-grow: 1; resize: none; border-radius: 6px; padding: 10px; border: none; font-family: inherit; font-size: 14px; background: #ecf0f1; color: #333;
+        }
+        .notes-container textarea:focus { outline: 2px solid #3498db; }
 
         #loading { display: none; font-size: 18px; text-align: center; font-weight: bold; margin: auto; color: #fff; }
         .footer-disclaimer { margin-top: 15px; text-align: center; color: #7f8c8d; font-size: 12px; }
@@ -183,7 +182,15 @@
             </div>
 
             <div id="loading">Pokédex is searching the database...</div>
-            <div id="board" class="grid"></div>
+            
+            <div id="mainGameArea" class="main-game-area">
+                <div id="board" class="grid"></div>
+                
+                <div id="notesContainer" class="notes-container">
+                    <h3 id="notesTitle">Notizen</h3>
+                    <textarea id="notesArea" placeholder="Schreibe hier..."></textarea>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -218,8 +225,7 @@
 
             <div class="control-group">
                 <label class="main-label">Regions</label>
-                <div class="checkbox-grid" id="modalGenCheckboxes">
-                    </div>
+                <div class="checkbox-grid" id="modalGenCheckboxes"></div>
             </div>
 
             <div class="button-group">
@@ -232,7 +238,6 @@
     <script>
         let currentTotalPokemon = 0;
 
-        // --- Übersetzungstabelle für Typen ---
         const typesDE = {
             "normal": "Normal", "fighting": "Kampf", "flying": "Flug", "poison": "Gift",
             "ground": "Boden", "rock": "Gestein", "bug": "Käfer", "ghost": "Geist",
@@ -241,24 +246,15 @@
             "dark": "Unlicht", "fairy": "Fee"
         };
 
-        // --- Custom Game Rules (Mehrsprachig) ---
         const gameRules = {
             "en": [
-                "Normal Game (No restrictions) ✅",
-                "No questions about Colors! 🎨",
-                "No questions about Types! 🔥💧",
-                "No questions about Evolutions! 🔄",
-                "No questions about Body Shape! 🦵",
-                "No questions about the Region/Generation! 🌍",
+                "Normal Game (No restrictions) ✅", "No questions about Colors! 🎨", "No questions about Types! 🔥💧",
+                "No questions about Evolutions! 🔄", "No questions about Body Shape! 🦵", "No questions about the Region/Generation! 🌍",
                 "No questions about the starting letter! 🔠"
             ],
             "de": [
-                "Normales Spiel (Keine Einschränkungen) ✅",
-                "Keine Fragen zur Farbe! 🎨",
-                "Keine Fragen zu den Typen! 🔥💧",
-                "Keine Fragen zu Entwicklungen! 🔄",
-                "Keine Fragen zur Körperform (Arme, Beine etc.)! 🦵",
-                "Keine Fragen zur Region/Generation! 🌍",
+                "Normales Spiel (Keine Einschränkungen) ✅", "Keine Fragen zur Farbe! 🎨", "Keine Fragen zu den Typen! 🔥💧",
+                "Keine Fragen zu Entwicklungen! 🔄", "Keine Fragen zur Körperform (Arme, Beine etc.)! 🦵", "Keine Fragen zur Region/Generation! 🌍",
                 "Keine Fragen zum Anfangsbuchstaben! 🔠"
             ]
         };
@@ -272,6 +268,13 @@
             "4": { min: 387, max: 493 }, "5": { min: 494, max: 649 }, "6": { min: 650, max: 721 },
             "7": { min: 722, max: 809 }, "8": { min: 810, max: 898 }, "9": { min: 899, max: 1025 }
         };
+
+        function getGenFromId(id) {
+            for (const [gen, range] of Object.entries(generations)) {
+                if (id >= range.min && id <= range.max) return gen;
+            }
+            return "?";
+        }
 
         document.getElementById('modalGenCheckboxes').innerHTML = document.getElementById('startGenCheckboxes').innerHTML;
 
@@ -344,13 +347,9 @@
             const totalPokemon = parseInt(document.getElementById(countId).value);
             const lang = document.getElementById(langId).value;
 
-            // Sync Inputs
-            document.getElementById('modalSeed').value = seed;
-            document.getElementById('startSeed').value = seed;
-            document.getElementById('modalPokemonCount').value = totalPokemon;
-            document.getElementById('startPokemonCount').value = totalPokemon;
-            document.getElementById('modalLanguage').value = lang;
-            document.getElementById('startLanguage').value = lang;
+            document.getElementById('modalSeed').value = seed; document.getElementById('startSeed').value = seed;
+            document.getElementById('modalPokemonCount').value = totalPokemon; document.getElementById('startPokemonCount').value = totalPokemon;
+            document.getElementById('modalLanguage').value = lang; document.getElementById('startLanguage').value = lang;
             syncCheckboxes(genContainerId, isFromModal ? 'startGenCheckboxes' : 'modalGenCheckboxes');
 
             currentTotalPokemon = totalPokemon;
@@ -369,8 +368,7 @@
             });
 
             if (totalPokemon > validIdsPool.length) { 
-                alert(`Error: Not enough Pokémon in the selected regions for the grid size.`); 
-                return; 
+                alert(`Error: Not enough Pokémon in the selected regions for the grid size.`); return; 
             }
 
             if (isFromModal) closeModal();
@@ -378,82 +376,126 @@
             document.getElementById('settingsBtn').style.display = 'block'; 
 
             const board = document.getElementById('board');
-            board.innerHTML = ''; board.style.display = 'none';
+            board.innerHTML = '';
+            document.getElementById('mainGameArea').style.display = 'none';
             document.getElementById('gameInfoContainer').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
 
             const seedHash = cyrb128(seed);
             const rand = sfc32(seedHash[0], seedHash[1], seedHash[2], seedHash[3]);
 
-            // UI Texte für die Spielinfo-Kopfzeile übersetzen
             document.getElementById('targetTitle').innerText = lang === 'de' ? 'Dein Pokémon:' : 'You are:';
             document.getElementById('ruleTitle').innerText = lang === 'de' ? 'Sonderregel' : 'Special Rule';
+            document.getElementById('notesTitle').innerText = lang === 'de' ? 'Notizen' : 'Notes';
+            document.getElementById('notesArea').placeholder = lang === 'de' ? 'Hinweise aufschreiben...' : 'Write notes here...';
+            document.getElementById('notesArea').value = ''; // Reset notes on new game
             
-            // Regel generieren
             const ruleIndex = Math.floor(rand() * gameRules[lang].length);
             document.getElementById('ruleText').textContent = gameRules[lang][ruleIndex];
 
-            const selectedIds = new Set();
-            while(selectedIds.size < totalPokemon) {
+            // Wähle IDs und berechne die Shiny-Chance (5%) pro Karte, deterministisch durch den Seed!
+            const selectedCardsData = [];
+            const usedIds = new Set();
+            while(selectedCardsData.length < totalPokemon) {
                 const randomIndex = Math.floor(rand() * validIdsPool.length);
-                selectedIds.add(validIdsPool[randomIndex]);
+                const chosenId = validIdsPool[randomIndex];
+                if (!usedIds.has(chosenId)) {
+                    usedIds.add(chosenId);
+                    selectedCardsData.push({
+                        id: chosenId,
+                        isShiny: rand() < 0.05 // 5% Shiny Chance
+                    });
+                }
             }
 
-            await buildBoard(Array.from(selectedIds), lang);
+            await buildBoard(selectedCardsData, lang);
             
             document.getElementById('loading').style.display = 'none';
             document.getElementById('gameInfoContainer').style.display = 'flex';
-            board.style.display = 'grid'; 
+            document.getElementById('mainGameArea').style.display = 'flex';
             calculateOptimalGrid(totalPokemon);
         }
 
-        async function buildBoard(ids, lang) {
+        async function buildBoard(cardsData, lang) {
             const board = document.getElementById('board');
             
-            const promises = ids.map(id => fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(res => res.json()));
+            // Lade alle Pokémon parallel
+            const promises = cardsData.map(data => fetch(`https://pokeapi.co/api/v2/pokemon/${data.id}`).then(res => res.json()));
             const pokemons = await Promise.all(promises);
+            const cardElements = [];
 
-            pokemons.forEach(pokemon => {
+            pokemons.forEach((pokemon, index) => {
+                const isShiny = cardsData[index].isShiny;
+                
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.onclick = () => card.classList.toggle('eliminated');
 
-                const img = document.createElement('img');
-                img.src = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
-                
-                const name = document.createElement('div');
-                name.className = 'name';
-                
-                // Namensauswahl (Deutsch oder Englisch)
-                const pokeName = (lang === 'de' && typeof pokemonNamesDE !== 'undefined' && pokemonNamesDE[pokemon.id]) 
-                                 ? pokemonNamesDE[pokemon.id] 
-                                 : pokemon.name;
-                name.textContent = pokeName;
+                // Sprite Logik (Shiny vs Normal)
+                let spriteUrl = pokemon.sprites.other['official-artwork'].front_default;
+                if (isShiny && pokemon.sprites.other['official-artwork'].front_shiny) {
+                    spriteUrl = pokemon.sprites.other['official-artwork'].front_shiny;
+                } else if (isShiny && pokemon.sprites.front_shiny) {
+                    spriteUrl = pokemon.sprites.front_shiny;
+                }
+                if (!spriteUrl) spriteUrl = pokemon.sprites.front_default;
 
-                const types = document.createElement('div');
-                types.className = 'types';
-                // Typen-Übersetzung
-                types.textContent = pokemon.types.map(t => {
+                // Name
+                const baseName = (lang === 'de' && typeof pokemonNamesDE !== 'undefined' && pokemonNamesDE[pokemon.id]) 
+                                 ? pokemonNamesDE[pokemon.id] : pokemon.name;
+                const displayName = isShiny ? `✨ ${baseName}` : baseName;
+
+                // Wiki URL
+                const wikiUrl = lang === 'de' 
+                    ? `https://www.pokewiki.de/${encodeURIComponent(baseName)}` 
+                    : `https://bulbapedia.bulbagarden.net/wiki/${encodeURIComponent(pokemon.name)}_(Pok%C3%A9mon)`;
+
+                // Gen & Stats
+                const gen = getGenFromId(pokemon.id);
+                const heightM = (pokemon.height / 10).toFixed(1) + "m";
+                const weightKg = (pokemon.weight / 10).toFixed(1) + "kg";
+
+                // Typen
+                const typesText = pokemon.types.map(t => {
                     if (lang === 'de') return typesDE[t.type.name] || t.type.name;
                     return t.type.name;
                 }).join(' / ');
 
-                card.appendChild(img); card.appendChild(name); card.appendChild(types);
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="gen-badge">Gen ${gen}</span>
+                        <a href="${wikiUrl}" target="_blank" class="id-link" onclick="event.stopPropagation()">#${pokemon.id}</a>
+                    </div>
+                    <img src="${spriteUrl}" alt="${baseName}">
+                    <div class="name">${displayName}</div>
+                    <div class="types">${typesText}</div>
+                    <div class="card-size">📏 ${heightM} | ⚖️ ${weightKg}</div>
+                `;
+
                 board.appendChild(card);
+                cardElements.push(card);
             });
 
-            // Target Pokémon
-            const myTarget = pokemons[Math.floor(Math.random() * pokemons.length)];
-            const targetInfo = document.getElementById('targetInfo');
-            const targetImg = myTarget.sprites.front_default || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
+            // Target Pokémon auswählen (immer zufällig für den jeweiligen Spieler)
+            const targetIndex = Math.floor(Math.random() * pokemons.length);
+            const myTarget = pokemons[targetIndex];
+            const isTargetShiny = cardsData[targetIndex].isShiny;
             
-            const targetName = (lang === 'de' && typeof pokemonNamesDE !== 'undefined' && pokemonNamesDE[myTarget.id]) 
-                               ? pokemonNamesDE[myTarget.id] 
-                               : myTarget.name;
+            // Markiere die Zielkarte auf dem Grid!
+            cardElements[targetIndex].classList.add('my-target');
 
+            const targetBaseName = (lang === 'de' && typeof pokemonNamesDE !== 'undefined' && pokemonNamesDE[myTarget.id]) 
+                               ? pokemonNamesDE[myTarget.id] : myTarget.name;
+            const targetDisplayName = isTargetShiny ? `✨ ${targetBaseName}` : targetBaseName;
+
+            let targetImg = myTarget.sprites.front_default;
+            if (isTargetShiny && myTarget.sprites.front_shiny) targetImg = myTarget.sprites.front_shiny;
+            if (!targetImg) targetImg = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
+
+            const targetInfo = document.getElementById('targetInfo');
             targetInfo.innerHTML = `
-                <img src="${targetImg}" alt="${targetName}" style="width: 45px; height: 45px; background: white; border-radius: 50%; border: 2px solid white;">
-                <div class="name" style="font-size: 18px; margin: 0; color: white; text-shadow: none;">${targetName.toUpperCase()}</div>
+                <img src="${targetImg}" alt="${targetBaseName}" style="width: 45px; height: 45px; background: white; border-radius: 50%; border: 2px solid white;">
+                <div class="name" style="font-size: 18px; margin: 0; color: white; text-shadow: none;">${targetDisplayName.toUpperCase()}</div>
             `;
         }
     </script>
