@@ -49,13 +49,39 @@
         button { padding: 10px 15px; font-size: 13px; background-color: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; min-width: 140px;}
         button:hover { background-color: #2980b9; }
         
-        /* Header Buttons (Einstellungen & Share) */
+        /* Header Buttons */
         button.settings-btn { background-color: #ecf0f1; color: #333; flex: none; display: none; border: 2px solid #bdc3c7; padding: 6px 12px; min-width: auto;}
         button.header-share-btn { background-color: #9b59b6; color: white; flex: none; display: none; border: 2px solid #8e44ad; padding: 6px 12px; min-width: auto; font-size: 13px;}
         button.header-share-btn:hover { background-color: #8e44ad; }
         
         button.random-btn { background-color: #e67e22; }
         button.share-btn { background-color: #9b59b6; }
+
+        /* Support Banner */
+        .support-banner {
+            margin-top: 25px;
+            padding: 12px;
+            background: #fff8e1;
+            border: 1px solid #f1c40f;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+        .support-banner a {
+            color: #d35400;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .support-banner a:hover {
+            background: #f1c40f;
+            color: #fff;
+        }
 
         .game-info-container { display: none; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 10px; flex-shrink: 0; width: 100%; }
         
@@ -133,7 +159,7 @@
         .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
         
-        /* Toast Notification (fürs Kopieren) */
+        /* Toast Notification */
         #toast { visibility: hidden; min-width: 250px; background-color: #2ecc71; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.3); font-size: 14px;}
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
@@ -213,6 +239,11 @@
                     <button id="btnStartGame" onclick="startGame(false)">Spiel starten</button>
                     <button id="btnRandomSeed" class="random-btn" onclick="generateRandomGame(false)">Zufälliger Seed</button>
                     <button id="btnShare" class="share-btn" onclick="copyInviteCode(false)">🔗 Invite-Code kopieren</button>
+                </div>
+
+                <div class="support-banner" id="supportBanner">
+                    <span id="supportText">Dir gefällt das Spiel? Unterstütze mich gerne freiwillig:</span><br>
+                    <a href="https://paypal.me/LarsiiiiHasi" target="_blank" id="supportLink">☕ PayPal Spende</a>
                 </div>
             </div>
 
@@ -367,6 +398,9 @@
                 document.getElementById('headerShareBtn').innerText = "🔗 Code kopieren";
                 document.getElementById('settingsBtn').innerText = "Einstellungen";
                 
+                document.getElementById('supportText').innerText = "Dir gefällt das Spiel? Unterstütze mich gerne freiwillig:";
+                document.getElementById('supportLink').innerText = "☕ PayPal Spende";
+
                 document.getElementById('modalTitleText').innerText = "Einstellungen";
                 document.getElementById('lblSeedModal').innerText = "Geheimwort ODER Invite-Code";
                 document.getElementById('lblAmountModal').innerText = "Anzahl der Pokémon";
@@ -394,6 +428,9 @@
                 document.getElementById('btnShare').innerText = "🔗 Copy Invite Code";
                 document.getElementById('headerShareBtn').innerText = "🔗 Copy Code";
                 document.getElementById('settingsBtn').innerText = "Settings";
+
+                document.getElementById('supportText').innerText = "Enjoying the game? Feel free to support me:";
+                document.getElementById('supportLink').innerText = "☕ Support via PayPal";
 
                 document.getElementById('modalTitleText').innerText = "Game Settings";
                 document.getElementById('lblSeedModal').innerText = "Secret Word OR Invite Code";
@@ -459,7 +496,7 @@
 
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('settingsBtn').style.display = 'block';
-            document.getElementById('headerShareBtn').style.display = 'block'; // Zeigt den Invite-Code Button im Header!
+            document.getElementById('headerShareBtn').style.display = 'block';
             document.getElementById('loading').style.display = 'block';
             document.getElementById('mainGameArea').style.display = 'none';
 
