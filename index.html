@@ -68,6 +68,13 @@ button {
   border-radius:10px;
   margin:10px 0;
 }
+
+.version {
+  opacity:0.6;
+  font-size:14px;
+  margin-top:-10px;
+  margin-bottom:10px;
+}
 </style>
 </head>
 
@@ -77,6 +84,7 @@ button {
 
 <div id="menu" class="panel">
   <h1 id="title">Wer bin ich? 🔍</h1>
+  <div id="version" class="version"></div>
 
   <input id="playerName" placeholder="Dein Name"><br>
   <input id="seedInput" placeholder="Geheimwort / Code"><br>
@@ -101,7 +109,14 @@ button {
 </div>
 
 <script>
+const VERSION = "v1.1.0";
+
 let seedValue = 0;
+
+// Version anzeigen
+window.onload = () => {
+  document.getElementById("version").innerText = VERSION;
+};
 
 // Hash
 function hash(str){
