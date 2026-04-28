@@ -61,7 +61,8 @@ body {
   font-size:10px;
 }
 
-/* COLORS */
+/* TYPE COLORS */
+.normal { background:#A8A77A; color:white; }
 .fire{background:#EE8130;}
 .water{background:#6390F0;}
 .grass{background:#7AC74C;}
@@ -130,11 +131,11 @@ let currentLang = "de";
 
 /* TYPE TRANSLATION */
 const typesDE = {
-  fire:"Feuer", water:"Wasser", grass:"Pflanze", electric:"Elektro",
+  normal:"Normal", fire:"Feuer", water:"Wasser", grass:"Pflanze", electric:"Elektro",
   ice:"Eis", fighting:"Kampf", poison:"Gift", ground:"Boden",
   flying:"Flug", psychic:"Psycho", bug:"Käfer", rock:"Gestein",
   ghost:"Geist", dragon:"Drache", dark:"Unlicht", steel:"Stahl",
-  fairy:"Fee", normal:"Normal"
+  fairy:"Fee"
 };
 
 /* LANGUAGE */
@@ -225,12 +226,14 @@ async function startGame(){
       return `<span class="type ${t.type.name}">${name}</span>`;
     }).join("");
 
+    let displayName = p.name;
+
     let card=document.createElement("div");
     card.className="card";
 
     card.innerHTML=`
       <img src="${p.sprites.front_default}">
-      <div>${p.name}</div>
+      <div>${displayName}</div>
       <div class="types">${typesHTML}</div>
     `;
 
