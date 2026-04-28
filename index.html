@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Who am I? – Pokédex</title>
+<title>Wer bin ich?</title>
 
 <style>
 body {
@@ -38,32 +38,47 @@ body {
   padding:5px;
   text-align:center;
   cursor:pointer;
-  border:3px solid #ccc;
 }
 
 .card img { width:72px; }
 
 .card.off { opacity:0.3; }
 
-/* TYPE COLORS */
-.normal { border-color:#A8A77A; }
-.fire { border-color:#EE8130; }
-.water { border-color:#6390F0; }
-.electric { border-color:#F7D02C; }
-.grass { border-color:#7AC74C; }
-.ice { border-color:#96D9D6; }
-.fighting { border-color:#C22E28; }
-.poison { border-color:#A33EA1; }
-.ground { border-color:#E2BF65; }
-.flying { border-color:#A98FF3; }
-.psychic { border-color:#F95587; }
-.bug { border-color:#A6B91A; }
-.rock { border-color:#B6A136; }
-.ghost { border-color:#735797; }
-.dragon { border-color:#6F35FC; }
-.dark { border-color:#705848; }
-.steel { border-color:#B7B7CE; }
-.fairy { border-color:#D685AD; }
+/* TYPES */
+.types {
+  margin-top:3px;
+  font-size:10px;
+  display:flex;
+  justify-content:center;
+  gap:3px;
+  flex-wrap:wrap;
+}
+
+.type {
+  padding:2px 5px;
+  border-radius:5px;
+  color:white;
+  font-size:10px;
+}
+
+/* COLORS */
+.fire{background:#EE8130;}
+.water{background:#6390F0;}
+.grass{background:#7AC74C;}
+.electric{background:#F7D02C;color:black;}
+.ice{background:#96D9D6;}
+.fighting{background:#C22E28;}
+.poison{background:#A33EA1;}
+.ground{background:#E2BF65;color:black;}
+.flying{background:#A98FF3;}
+.psychic{background:#F95587;}
+.bug{background:#A6B91A;}
+.rock{background:#B6A136;}
+.ghost{background:#735797;}
+.dragon{background:#6F35FC;}
+.dark{background:#705848;}
+.steel{background:#B7B7CE;color:black;}
+.fairy{background:#D685AD;}
 
 .target {
   background:#2ecc71;
@@ -72,7 +87,7 @@ body {
   margin-bottom:10px;
 }
 
-button, input {
+button, input, select {
   padding:10px;
   margin:5px;
   border-radius:8px;
@@ -87,15 +102,22 @@ button, input {
 
 <!-- MENU -->
 <div id="menu" class="screen">
-  <h2>Who am I? 🔍</h2>
-  <input id="playerName" placeholder="Your name"><br>
+  <h2 id="title">Wer bin ich? 🔍</h2>
+
+  <input id="playerName" placeholder="Name"><br>
   <input id="seedInput" placeholder="Seed / Code"><br>
-  <button onclick="startGame()">Start</button>
+
+  <select id="lang" onchange="updateLang()">
+    <option value="de">Deutsch</option>
+    <option value="en">English</option>
+  </select><br>
+
+  <button onclick="startGame()" id="startBtn">Start</button>
 </div>
 
 <!-- GAME -->
 <div id="game" class="screen" style="display:none;">
-  <button onclick="back()">⬅ Back</button>
+  <button onclick="back()">⬅</button>
   <div id="target" class="target"></div>
   <div id="board" class="grid"></div>
 </div>
@@ -104,7 +126,33 @@ button, input {
 
 <script>
 let seedValue = 0;
+let currentLang = "de";
 
+/* TYPE TRANSLATION */
+const typesDE = {
+  fire:"Feuer", water:"Wasser", grass:"Pflanze", electric:"Elektro",
+  ice:"Eis", fighting:"Kampf", poison:"Gift", ground:"Boden",
+  flying:"Flug", psychic:"Psycho", bug:"Käfer", rock:"Gestein",
+  ghost:"Geist", dragon:"Drache", dark:"Unlicht", steel:"Stahl",
+  fairy:"Fee", normal:"Normal"
+};
+
+/* LANGUAGE */
+function updateLang(){
+  currentLang = document.getElementById("lang").value;
+
+  if(currentLang==="de"){
+    title.innerText="Wer bin ich? 🔍";
+    startBtn.innerText="Start";
+    playerName.placeholder="Name";
+  } else {
+    title.innerText="Who am I? 🔍";
+    startBtn.innerText="Start";
+    playerName.placeholder="Your name";
+  }
+}
+
+/* RNG */
 function hash(str){
   let h=0;
   for(let i=0;i<str.length;i++){
@@ -133,13 +181,14 @@ function back(){
   menu.style.display="block";
 }
 
+/* START */
 async function startGame(){
 
   const player = playerName.value.trim();
   const seedInput = document.getElementById("seedInput").value.trim();
 
   if(!player){
-    alert("Enter name");
+    alert(currentLang==="de"?"Name fehlt":"Enter name");
     return;
   }
 
@@ -167,16 +216,22 @@ async function startGame(){
   board.innerHTML="";
 
   data.forEach(p=>{
+
+    let typesHTML = p.types.map(t=>{
+      let name = currentLang==="de"
+        ? typesDE[t.type.name]
+        : t.type.name;
+
+      return `<span class="type ${t.type.name}">${name}</span>`;
+    }).join("");
+
     let card=document.createElement("div");
-
-    // 🔥 Typen als Klassen
-    let typeClasses = p.types.map(t=>t.type.name).join(" ");
-
-    card.className="card " + typeClasses;
+    card.className="card";
 
     card.innerHTML=`
       <img src="${p.sprites.front_default}">
       <div>${p.name}</div>
+      <div class="types">${typesHTML}</div>
     `;
 
     card.onclick=()=>card.classList.toggle("off");
@@ -189,7 +244,8 @@ async function startGame(){
   let target = data[targetIndex];
 
   document.getElementById("target").innerHTML =
-    "You are: <b>"+target.name+"</b>";
+    (currentLang==="de"?"Du bist: ":"You are: ")
+    + "<b>"+target.name+"</b>";
 }
 </script>
 
