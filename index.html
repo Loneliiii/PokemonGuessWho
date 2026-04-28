@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wer bin ich? – Pokédex</title>
+<title>Who am I? – Pokédex</title>
 
 <style>
 body {
@@ -38,57 +38,32 @@ body {
   padding:5px;
   text-align:center;
   cursor:pointer;
-  position:relative;
+  border:3px solid #ccc;
 }
 
 .card img { width:72px; }
 
 .card.off { opacity:0.3; }
 
-/* 🔥 HIGHLIGHT */
-.card.show-info {
-  outline:3px solid #3498db;
-}
-
-/* 🔥 TYPES OVERLAY */
-.types {
-  position:absolute;
-  bottom:5px;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  gap:3px;
-}
-
-.card.show-info .types {
-  display:flex;
-}
-
-.type {
-  padding:2px 5px;
-  border-radius:5px;
-  font-size:10px;
-  color:white;
-}
-
 /* TYPE COLORS */
-.fire { background:#e67e22; }
-.water { background:#3498db; }
-.grass { background:#2ecc71; }
-.electric { background:#f1c40f; color:black; }
-.ice { background:#5dade2; }
-.fighting { background:#c0392b; }
-.poison { background:#8e44ad; }
-.ground { background:#d4ac0d; }
-.flying { background:#85c1e9; }
-.psychic { background:#ff6b81; }
-.bug { background:#82e0aa; color:black; }
-.rock { background:#a04000; }
-.ghost { background:#5b2c6f; }
-.dragon { background:#6c3483; }
-.dark { background:#34495e; }
-.steel { background:#95a5a6; }
-.fairy { background:#f8cdda; color:black; }
+.normal { border-color:#A8A77A; }
+.fire { border-color:#EE8130; }
+.water { border-color:#6390F0; }
+.electric { border-color:#F7D02C; }
+.grass { border-color:#7AC74C; }
+.ice { border-color:#96D9D6; }
+.fighting { border-color:#C22E28; }
+.poison { border-color:#A33EA1; }
+.ground { border-color:#E2BF65; }
+.flying { border-color:#A98FF3; }
+.psychic { border-color:#F95587; }
+.bug { border-color:#A6B91A; }
+.rock { border-color:#B6A136; }
+.ghost { border-color:#735797; }
+.dragon { border-color:#6F35FC; }
+.dark { border-color:#705848; }
+.steel { border-color:#B7B7CE; }
+.fairy { border-color:#D685AD; }
 
 .target {
   background:#2ecc71;
@@ -110,15 +85,17 @@ button, input {
 
 <div class="pokedex">
 
+<!-- MENU -->
 <div id="menu" class="screen">
-  <h2>Wer bin ich? 🔍</h2>
-  <input id="playerName" placeholder="Name"><br>
-  <input id="seedInput" placeholder="Seed"><br>
+  <h2>Who am I? 🔍</h2>
+  <input id="playerName" placeholder="Your name"><br>
+  <input id="seedInput" placeholder="Seed / Code"><br>
   <button onclick="startGame()">Start</button>
 </div>
 
+<!-- GAME -->
 <div id="game" class="screen" style="display:none;">
-  <button onclick="back()">⬅</button>
+  <button onclick="back()">⬅ Back</button>
   <div id="target" class="target"></div>
   <div id="board" class="grid"></div>
 </div>
@@ -162,7 +139,7 @@ async function startGame(){
   const seedInput = document.getElementById("seedInput").value.trim();
 
   if(!player){
-    alert("Name fehlt");
+    alert("Enter name");
     return;
   }
 
@@ -191,37 +168,18 @@ async function startGame(){
 
   data.forEach(p=>{
     let card=document.createElement("div");
-    card.className="card";
 
-    let typesHTML = p.types.map(t =>
-      `<span class="type ${t.type.name}">${t.type.name}</span>`
-    ).join("");
+    // 🔥 Typen als Klassen
+    let typeClasses = p.types.map(t=>t.type.name).join(" ");
+
+    card.className="card " + typeClasses;
 
     card.innerHTML=`
       <img src="${p.sprites.front_default}">
       <div>${p.name}</div>
-      <div class="types">${typesHTML}</div>
     `;
 
-    // Klick = eliminieren
     card.onclick=()=>card.classList.toggle("off");
-
-    // 🖱️ Hover (PC)
-    card.onmouseenter=()=>card.classList.add("show-info");
-    card.onmouseleave=()=>card.classList.remove("show-info");
-
-    // 📱 Long Press (Mobile)
-    let pressTimer;
-    card.ontouchstart=()=>{
-      pressTimer = setTimeout(()=>{
-        card.classList.add("show-info");
-      },300);
-    };
-
-    card.ontouchend=()=>{
-      clearTimeout(pressTimer);
-      setTimeout(()=>card.classList.remove("show-info"),200);
-    };
 
     board.appendChild(card);
   });
@@ -231,7 +189,7 @@ async function startGame(){
   let target = data[targetIndex];
 
   document.getElementById("target").innerHTML =
-    "Du bist: <b>"+target.name+"</b>";
+    "You are: <b>"+target.name+"</b>";
 }
 </script>
 
