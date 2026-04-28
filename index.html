@@ -329,10 +329,27 @@
         
         const genRanges = { 1: [1,151], 2: [152,251], 3: [252,386], 4: [387,493], 5: [494,649], 6: [650,721], 7: [722,809], 8: [810,898], 9: [906,1025] };
         
-        const gameRules = {
-            de: ["Hat dein Pokémon Hörner?", "Ist dein Pokémon blau?", "Hat dein Pokémon Arme?", "Kann dein Pokémon fliegen?", "Ist dein Pokémon flauschig?", "Ist dein Pokémon schwerer als 50kg?", "Gibt es dein Pokémon schon seit Gen 1?"],
-            en: ["Does your Pokémon have horns?", "Is your Pokémon blue?", "Does your Pokémon have arms?", "Can your Pokémon fly?", "Is your Pokémon fluffy?", "Is your Pokémon heavier than 50kg?", "Is your Pokémon from Gen 1?"]
+                const gameRules = {
+            de: [
+                "Verboten: Fragen zu Entwicklungen!", 
+                "Verboten: Fragen zur Hauptfarbe!", 
+                "Verboten: Fragen zum Pokémon-Typ!", 
+                "Verboten: Fragen zur Generation!", 
+                "Verboten: Fragen zu Größe oder Gewicht!", 
+                "Verboten: Fragen zu Gliedmaßen (Arme/Beine)!", 
+                "Verboten: Fragen zum Anfangsbuchstaben!"
+            ],
+            en: [
+                "Forbidden: Questions about evolutions!", 
+                "Forbidden: Questions about the main color!", 
+                "Forbidden: Questions about typings!", 
+                "Forbidden: Questions about the generation!", 
+                "Forbidden: Questions about height or weight!", 
+                "Forbidden: Questions about limbs (arms/legs)!", 
+                "Forbidden: Questions about the starting letter!"
+            ]
         };
+
 
         let seedValue = 0;
         
