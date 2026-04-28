@@ -62,7 +62,7 @@ body {
 }
 
 /* TYPE COLORS */
-.normal { background:#A8A77A; color:white; }
+.normal { background:#A8A77A; }
 .fire{background:#EE8130;}
 .water{background:#6390F0;}
 .grass{background:#7AC74C;}
@@ -129,6 +129,9 @@ button, input, select {
 let seedValue = 0;
 let currentLang = "de";
 
+/* CACHE für deutsche Namen */
+const germanCache = {};
+
 /* TYPE TRANSLATION */
 const typesDE = {
   normal:"Normal", fire:"Feuer", water:"Wasser", grass:"Pflanze", electric:"Elektro",
@@ -144,11 +147,9 @@ function updateLang(){
 
   if(currentLang==="de"){
     title.innerText="Wer bin ich? 🔍";
-    startBtn.innerText="Start";
     playerName.placeholder="Name";
   } else {
     title.innerText="Who am I? 🔍";
-    startBtn.innerText="Start";
     playerName.placeholder="Your name";
   }
 }
@@ -182,6 +183,20 @@ function back(){
   menu.style.display="block";
 }
 
+/* 🔥 deutsche Namen mit Cache */
+async function getGermanName(id){
+  if(germanCache[id]) return germanCache[id];
+
+  let res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+  let data = await res.json();
+  let entry = data.names.find(n=>n.language.name==="de");
+
+  let name = entry ? entry.name : data.name;
+  germanCache[id] = name;
+
+  return name;
+}
+
 /* START */
 async function startGame(){
 
@@ -211,7 +226,12 @@ async function startGame(){
   for(let id of ids){
     let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     let p = await res.json();
-    data.push(p);
+
+    let displayName = currentLang==="de"
+      ? await getGermanName(id)
+      : p.name;
+
+    data.push({...p, displayName});
   }
 
   board.innerHTML="";
@@ -226,14 +246,12 @@ async function startGame(){
       return `<span class="type ${t.type.name}">${name}</span>`;
     }).join("");
 
-    let displayName = p.name;
-
     let card=document.createElement("div");
     card.className="card";
 
     card.innerHTML=`
       <img src="${p.sprites.front_default}">
-      <div>${displayName}</div>
+      <div>${p.displayName}</div>
       <div class="types">${typesHTML}</div>
     `;
 
@@ -246,9 +264,13 @@ async function startGame(){
   let targetIndex = Math.abs(playerSeed) % data.length;
   let target = data[targetIndex];
 
+  let targetName = currentLang==="de"
+    ? await getGermanName(target.id)
+    : target.name;
+
   document.getElementById("target").innerHTML =
     (currentLang==="de"?"Du bist: ":"You are: ")
-    + "<b>"+target.name+"</b>";
+    + "<b>"+targetName+"</b>";
 }
 </script>
 
