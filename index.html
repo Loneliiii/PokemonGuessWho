@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pokémon - Wer bin ich?</title>
     
     <script src="pokemon_de.js"></script>
@@ -32,26 +32,38 @@
 
         .screen-header { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
 
+        /* Angepasstes, freundlicheres Start-Menü */
         .start-screen {
-            background: #fff; padding: 20px 30px; border-radius: 12px; max-width: 550px; margin: auto; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; overflow-y: auto; max-height: 100%;
+            background: #ffffff; padding: 25px 20px; border-radius: 16px; max-width: 500px; margin: auto; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4); text-align: center; overflow-y: auto; max-height: 100%;
+            border: 2px solid #ecf0f1;
         }
-        .start-screen h1 { margin-top: 0; color: #2c3e50; font-size: 24px; }
+        .start-screen h1 { margin-top: 0; color: #e74c3c; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; }
 
-        .control-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; text-align: left; }
-        .control-group label.main-label { font-size: 12px; font-weight: bold; color: #555; text-transform: uppercase; }
-        input[type="text"], select { padding: 8px 10px; font-size: 14px; border: 2px solid #e0e0e0; border-radius: 6px; background-color: #fafafa; }
+        .control-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; text-align: left; }
+        .control-group label.main-label { font-size: 13px; font-weight: 700; color: #2c3e50; }
+        input[type="text"], select { 
+            padding: 12px; font-size: 15px; border: 2px solid #bdc3c7; border-radius: 8px; 
+            background-color: #f8f9fa; transition: border-color 0.2s; outline: none;
+        }
+        input[type="text"]:focus, select:focus { border-color: #3498db; }
         
-        .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #e0e0e0; }
-        .checkbox-grid label { font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; color: #333; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
+        .checkbox-grid label { font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer; color: #333; padding: 4px 0;}
+        .checkbox-grid input[type="checkbox"] { transform: scale(1.2); } /* Größere Checkboxen für Touch */
 
-        .button-group { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;}
-        button { padding: 10px 15px; font-size: 13px; background-color: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; min-width: 140px;}
+        .button-group { display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;}
+        button { 
+            padding: 12px 15px; font-size: 14px; background-color: #3498db; color: white; border: none; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; min-width: 140px;
+            transition: transform 0.1s, background-color 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:active { transform: scale(0.97); }
         button:hover { background-color: #2980b9; }
         
         /* Header Buttons */
-        button.settings-btn { background-color: #ecf0f1; color: #333; flex: none; display: none; border: 2px solid #bdc3c7; padding: 6px 12px; min-width: auto;}
-        button.header-share-btn { background-color: #9b59b6; color: white; flex: none; display: none; border: 2px solid #8e44ad; padding: 6px 12px; min-width: auto; font-size: 13px;}
+        button.settings-btn { background-color: #ecf0f1; color: #333; flex: none; display: none; border: 2px solid #bdc3c7; padding: 8px 12px; min-width: auto; box-shadow: none;}
+        button.header-share-btn { background-color: #9b59b6; color: white; flex: none; display: none; border: 2px solid #8e44ad; padding: 8px 12px; min-width: auto; font-size: 13px; box-shadow: none;}
         button.header-share-btn:hover { background-color: #8e44ad; }
         
         button.random-btn { background-color: #e67e22; }
@@ -59,67 +71,53 @@
 
         /* Support Banner */
         .support-banner {
-            margin-top: 25px;
-            padding: 12px;
-            background: #fff8e1;
-            border: 1px solid #f1c40f;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #666;
-            text-align: center;
+            margin-top: 25px; padding: 15px; background: #fff8e1; border: 2px dashed #f1c40f;
+            border-radius: 12px; font-size: 13px; color: #666; text-align: center;
         }
         .support-banner a {
-            color: #d35400;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 5px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            color: #d35400; font-weight: bold; text-decoration: none; display: inline-block;
+            margin-top: 8px; padding: 8px 15px; border-radius: 6px; transition: background 0.2s; border: 1px solid #d35400;
         }
-        .support-banner a:hover {
-            background: #f1c40f;
-            color: #fff;
-        }
+        .support-banner a:hover { background: #f1c40f; color: #fff; border-color: #f1c40f; }
 
-        .game-info-container { display: none; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 10px; flex-shrink: 0; width: 100%; }
+        .game-info-container { display: none; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px; flex-shrink: 0; width: 100%; }
         
-        .target-container { 
-            background: linear-gradient(135deg, #f1c40f, #f39c12); padding: 5px 20px; border-radius: 8px; 
-            text-align: center; border: 2px solid #d68910; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; 
-            display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: nowrap; min-width: 250px;
+        .target-container, .rule-container { 
+            padding: 8px 15px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; 
+            display: flex; align-items: center; justify-content: center; flex-wrap: nowrap; flex: 1; min-width: 140px;
         }
-        .target-container h2 { margin: 0; font-size: 13px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); text-transform: uppercase; white-space: nowrap;}
+        .target-container { background: linear-gradient(135deg, #f1c40f, #f39c12); border: 2px solid #d68910; gap: 8px;}
+        .rule-container { background: linear-gradient(135deg, #9b59b6, #8e44ad); border: 2px solid #732d91; flex-direction: column; }
         
+        .target-container h2 { margin: 0; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); text-transform: uppercase; white-space: nowrap;}
         #targetInfo { display: flex; align-items: center; gap: 8px; }
-        #targetInfo .name { font-size: 16px !important; font-weight: bold; white-space: nowrap; }
+        #targetInfo .name { font-size: 15px !important; font-weight: bold; white-space: nowrap; margin: 0; color: #fff;}
 
-        .rule-container { 
-            background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 5px 20px; border-radius: 8px; 
-            text-align: center; border: 2px solid #732d91; box-shadow: 0 4px 6px rgba(0,0,0,0.3); color: #fff; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 250px;
-        }
         .rule-container h2 { margin: 0 0 2px 0; font-size: 10px; text-transform: uppercase; color: #e8d4f0; letter-spacing: 1px;}
-        .rule-text { font-size: 14px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        .rule-text { font-size: 13px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
-        .main-game-area { display: none; flex-grow: 1; gap: 15px; min-height: 0; height: 100%; width: 100%; overflow: hidden; }
-        .grid-wrapper { flex-grow: 1; overflow: hidden; min-height: 0; display: flex; flex-direction: column;}
+        .main-game-area { display: none; flex-grow: 1; min-height: 0; height: 100%; width: 100%; overflow: hidden; }
+        .grid-wrapper { flex-grow: 1; overflow-y: auto; overflow-x: hidden; min-height: 0; display: flex; flex-direction: column; padding-right: 5px;}
+        
+        /* Scrollbar Styling für Webkit */
+        .grid-wrapper::-webkit-scrollbar { width: 6px; }
+        .grid-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        .grid-wrapper::-webkit-scrollbar-thumb { background: #7f8c8d; border-radius: 4px; }
 
         :root { --cols: 6; --rows: 4; }
-        .grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-template-rows: repeat(var(--rows), 1fr); gap: 1vmin; height: 100%; width: 100%; }
-        
-        .grid.info-always { overflow-y: auto; grid-template-rows: repeat(var(--rows), minmax(130px, 1fr)); padding-right: 5px;}
-        .grid.info-always::-webkit-scrollbar { width: 6px; }
-        .grid.info-always::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-        .grid.info-always::-webkit-scrollbar-thumb { background: #7f8c8d; border-radius: 4px; }
+        .grid { 
+            display: grid; grid-template-columns: repeat(var(--cols), 1fr); 
+            grid-template-rows: repeat(var(--rows), minmax(100px, 1fr)); 
+            gap: 1vmin; width: 100%; 
+        }
         
         .card {
             background: #ffffff; border-radius: 8px; padding: 0.5vmin 1vmin; text-align: center; border: 3px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; transition: transform 0.1s, border-color 0.1s; overflow: hidden; position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; user-select: none; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 100px; box-sizing: border-box; 
+            transition: transform 0.1s, border-color 0.1s; overflow: hidden; position: relative;
         }
-        .grid.info-always .card { min-height: 130px; } 
-        .card:hover { border-color: #e74c3c; transform: scale(1.03); z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
+        .card:hover { border-color: #e74c3c; transform: scale(1.02); z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
         .card.eliminated { opacity: 0.25; filter: grayscale(100%) brightness(0.5); background-color: #e9ecef; border-color: #555; }
         .card.my-target { border: 4px solid #f1c40f !important; box-shadow: 0 0 15px #f1c40f, inset 0 0 10px rgba(241,196,15,0.3); z-index: 5; }
         .card.my-target.eliminated { opacity: 0.45; filter: grayscale(50%) brightness(0.6); }
@@ -129,9 +127,9 @@
         .id-link { color: #3498db; text-decoration: none; }
         .id-link:hover { text-decoration: underline; color: #e74c3c; }
 
-        .card img { max-width: 95%; height: auto; max-height: 60%; min-height: 30px; object-fit: contain; flex-shrink: 1; pointer-events: none;}
-        .name { font-weight: bold; text-transform: capitalize; font-size: clamp(10px, 1.5vmin, 16px); color: #222; margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; flex-shrink: 0; pointer-events: none;}
-        .types { font-size: clamp(10px, 1.2vmin, 12px); color: #fff; background: #7f8c8d; padding: 2px 6px; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 95%; flex-shrink: 0;}
+        .card img { max-width: 95%; height: auto; max-height: 55%; min-height: 40px; object-fit: contain; flex-shrink: 1; pointer-events: none;}
+        .name { font-weight: bold; text-transform: capitalize; font-size: clamp(11px, 1.5vmin, 16px); color: #222; margin: 4px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; flex-shrink: 0; pointer-events: none;}
+        .types { font-size: clamp(9px, 1.2vmin, 12px); color: #fff; background: #7f8c8d; padding: 2px 6px; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 95%; flex-shrink: 0;}
         .card-size { font-size: clamp(9px, 1.1vmin, 11px); color: #7f8c8d; margin-top: 2px; flex-shrink: 0;}
 
         /* Tooltip */
@@ -145,25 +143,51 @@
         .mouse-tooltip .t-size { color: #bdc3c7; font-size: 11px; display: block; }
         .mouse-tooltip .t-big-title { font-weight: bold; color: #f1c40f; font-size: 15px; margin-bottom: 5px; text-transform: uppercase;}
 
-        .notes-container {
-            display: flex; flex-direction: column; width: 200px; flex-shrink: 0; background: #2c3e50; border-radius: 8px; padding: 10px; border: 2px solid #34495e; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); overflow: hidden;
-        }
-        .notes-container h3 { margin: 0 0 8px 0; color: #fff; font-size: 13px; text-transform: uppercase; text-align: center; letter-spacing: 1px;}
-        .notes-container textarea {
-            flex-grow: 1; resize: none; border-radius: 6px; padding: 8px; border: none; font-family: inherit; font-size: 13px; background: #ecf0f1; color: #333; line-height: 1.4;
-        }
-        .notes-container textarea:focus { outline: 2px solid #3498db; }
-
         #loading { display: none; font-size: 18px; text-align: center; font-weight: bold; margin: auto; color: #fff; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 16px; width: 90%; max-width: 450px; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; color: #666; line-height: 1;}
         
         /* Toast Notification */
         #toast { visibility: hidden; min-width: 250px; background-color: #2ecc71; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.3); font-size: 14px;}
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        /* =========================================
+           MOBILE OPTIMIERUNGEN (Media Queries)
+           ========================================= */
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .pokedex { border-radius: 0; border: none; padding: 10px; }
+            .screen-container { padding: 10px; border-width: 2px;}
+            
+            .start-screen { padding: 15px; width: 100%; box-sizing: border-box; border: none;}
+            .start-screen h1 { font-size: 22px; }
+            
+            .button-group { flex-direction: column; }
+            .button-group button { width: 100%; }
+            
+            /* UI anpassen für mehr Platz im Spiel */
+            .game-info-container { flex-direction: column; gap: 8px; }
+            .target-container, .rule-container { width: 100%; box-sizing: border-box; }
+            
+            /* Grid für Handys überschreiben - zwingt es in eine scrollbare 3er oder 4er Ansicht */
+            .grid { 
+                grid-template-columns: repeat(3, 1fr) !important; 
+                grid-template-rows: auto !important; 
+            }
+            .card { min-height: 120px; } /* Gut treffbar mit dem Finger */
+            .name { font-size: 12px; }
+            .card img { min-height: 45px; }
+        }
+
+        /* Für sehr schmale Displays (z.B. iPhone SE) */
+        @media (max-width: 380px) {
+            .grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .card { min-height: 140px; }
+            .checkbox-grid { grid-template-columns: 1fr; } /* Checkboxen untereinander */
+        }
     </style>
 </head>
 <body>
@@ -182,15 +206,17 @@
         <div class="screen-container">
             <div class="screen-header">
                 <button id="headerShareBtn" class="header-share-btn" onclick="copyInviteCode(false)">🔗 Code kopieren</button>
-                <button id="settingsBtn" class="settings-btn" onclick="openModal()">Einstellungen</button>
+                <button id="settingsBtn" class="settings-btn" onclick="openModal()">⚙️ Settings</button>
             </div>
 
             <div id="startScreen" class="start-screen">
-                <h1 id="uiTitle">Wer ist das Pokémon?</h1>
-                <p id="uiDesc" style="color: #666; font-size: 13px; margin-bottom: 15px;">Gib ein gemeinsames Geheimwort ein, um das gleiche Feld zu generieren!</p>
+                <h1 id="uiTitle">Wer bin ich? 🔍</h1>
+                <p id="uiDesc" style="color: #555; font-size: 14px; margin-bottom: 20px; line-height: 1.4;">
+                    Schnapp dir einen Freund, gebt dasselbe Geheimwort ein und ratet los!
+                </p>
                 
                 <div class="control-group">
-                    <label class="main-label" for="startLanguage">Sprache / Language</label>
+                    <label class="main-label" for="startLanguage">🌍 Sprache / Language</label>
                     <select id="startLanguage" onchange="updateUITexts()">
                         <option value="de" selected>Deutsch</option>
                         <option value="en">English</option>
@@ -198,31 +224,31 @@
                 </div>
                 
                 <div class="control-group">
-                    <label class="main-label" id="lblSeedStart" for="startSeed">Geheimwort ODER Invite-Code</label>
-                    <input type="text" id="startSeed" placeholder="z.B. Glurak99 oder PKMN-..." oninput="checkInviteCode(this.value, false)">
+                    <label class="main-label" id="lblSeedStart" for="startSeed">🔑 Geheimwort ODER Invite-Code</label>
+                    <input type="text" id="startSeed" placeholder="z.B. Pikachu99" oninput="checkInviteCode(this.value, false)">
                 </div>
                 
                 <div class="control-group">
-                    <label class="main-label" id="lblAmountStart" for="startPokemonCount">Anzahl der Pokémon</label>
+                    <label class="main-label" id="lblAmountStart" for="startPokemonCount">🔢 Anzahl der Pokémon</label>
                     <select id="startPokemonCount">
-                        <option value="16">16 Pokémon</option>
-                        <option value="24" selected>24 Pokémon</option>
-                        <option value="36">36 Pokémon</option>
+                        <option value="16">16 Pokémon (Kurze Runde)</option>
+                        <option value="24" selected>24 Pokémon (Standard)</option>
+                        <option value="36">36 Pokémon (Lang)</option>
                         <option value="48" id="optLgStart">48 Pokémon (Groß)</option>
                         <option value="64" id="optXlStart">64 Pokémon (Riesig)</option>
                     </select>
                 </div>
 
                 <div class="control-group">
-                    <label class="main-label" id="lblInfoStart" for="startInfoMode">Zusatz-Infos (Typen, Gen, Maße)</label>
+                    <label class="main-label" id="lblInfoStart" for="startInfoMode">ℹ️ Zusatz-Infos (Typen, Gen, Maße)</label>
                     <select id="startInfoMode">
-                        <option value="tooltip" id="optHoverStart" selected>Als Tooltip an der Maus (Kein Scrollen)</option>
-                        <option value="always" id="optAlwaysStart">In der Karte (Scrollen erforderlich)</option>
+                        <option value="tooltip" id="optHoverStart" selected>Nur beim Antippen / Hover</option>
+                        <option value="always" id="optAlwaysStart">Immer anzeigen</option>
                     </select>
                 </div>
 
                 <div class="control-group">
-                    <label class="main-label" id="lblRegionsStart">Regionen (Beliebig kombinierbar)</label>
+                    <label class="main-label" id="lblRegionsStart">🗺️ Regionen</label>
                     <div class="checkbox-grid" id="startGenCheckboxes">
                         <label><input type="checkbox" value="1" checked class="gen-cb"> Kanto (Gen 1)</label>
                         <label><input type="checkbox" value="2" class="gen-cb"> Johto (Gen 2)</label>
@@ -235,10 +261,11 @@
                         <label><input type="checkbox" value="9" class="gen-cb"> Paldea (Gen 9)</label>
                     </div>
                 </div>
+                
                 <div class="button-group">
-                    <button id="btnStartGame" onclick="startGame(false)">Spiel starten</button>
-                    <button id="btnRandomSeed" class="random-btn" onclick="generateRandomGame(false)">Zufälliger Seed</button>
-                    <button id="btnShare" class="share-btn" onclick="copyInviteCode(false)">🔗 Invite-Code kopieren</button>
+                    <button id="btnStartGame" onclick="startGame(false)">🚀 Spiel starten</button>
+                    <button id="btnRandomSeed" class="random-btn" onclick="generateRandomGame(false)">🎲 Zufallsrunde</button>
+                    <button id="btnShare" class="share-btn" onclick="copyInviteCode(false)">🔗 Code senden</button>
                 </div>
 
                 <div class="support-banner" id="supportBanner">
@@ -249,7 +276,7 @@
 
             <div id="gameInfoContainer" class="game-info-container">
                 <div class="target-container">
-                    <h2 id="targetTitle">Dein Pokémon:</h2>
+                    <h2 id="targetTitle">Ziel:</h2>
                     <div id="targetInfo"></div>
                 </div>
                 <div class="rule-container">
@@ -264,41 +291,37 @@
                 <div class="grid-wrapper" id="gridWrapper">
                     <div id="board" class="grid"></div>
                 </div>
-                <div id="notesContainer" class="notes-container">
-                    <h3 id="notesTitle">Notizen</h3>
-                    <textarea id="notesArea"></textarea>
                 </div>
-            </div>
         </div>
     </div>
 
     <div id="settingsModal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitleText" style="margin-top: 0; color: #333; text-align: center;">Einstellungen</h2>
+            <h2 id="modalTitleText" style="margin-top: 0; color: #333; text-align: center;">⚙️ Einstellungen</h2>
             <div class="control-group">
-                <label class="main-label" for="modalLanguage">Sprache / Language</label>
+                <label class="main-label" for="modalLanguage">🌍 Sprache</label>
                 <select id="modalLanguage" onchange="updateUITexts()"><option value="de" selected>Deutsch</option><option value="en">English</option></select>
             </div>
             <div class="control-group">
-                <label class="main-label" id="lblSeedModal" for="modalSeed">Geheimwort ODER Invite-Code</label>
+                <label class="main-label" id="lblSeedModal" for="modalSeed">🔑 Geheimwort ODER Invite-Code</label>
                 <input type="text" id="modalSeed" oninput="checkInviteCode(this.value, true)">
             </div>
             <div class="control-group">
-                <label class="main-label" id="lblAmountModal" for="modalPokemonCount">Anzahl der Pokémon</label>
+                <label class="main-label" id="lblAmountModal" for="modalPokemonCount">🔢 Anzahl der Pokémon</label>
                 <select id="modalPokemonCount"><option value="16">16</option><option value="24">24</option><option value="36">36</option><option value="48" id="optLgModal">48 (Groß)</option><option value="64" id="optXlModal">64 (Riesig)</option></select>
             </div>
             <div class="control-group">
-                <label class="main-label" id="lblInfoModal" for="modalInfoMode">Zusatz-Infos</label>
+                <label class="main-label" id="lblInfoModal" for="modalInfoMode">ℹ️ Zusatz-Infos</label>
                 <select id="modalInfoMode">
-                    <option value="tooltip" id="optHoverModal" selected>Als Tooltip</option>
-                    <option value="always" id="optAlwaysModal">In der Karte</option>
+                    <option value="tooltip" id="optHoverModal" selected>Beim Antippen</option>
+                    <option value="always" id="optAlwaysModal">Immer anzeigen</option>
                 </select>
             </div>
-            <div class="control-group"><label class="main-label" id="lblRegionsModal">Regionen</label><div class="checkbox-grid" id="modalGenCheckboxes"></div></div>
+            <div class="control-group"><label class="main-label" id="lblRegionsModal">🗺️ Regionen</label><div class="checkbox-grid" id="modalGenCheckboxes"></div></div>
             <div class="button-group">
-                <button id="btnApply" onclick="startGame(true)">Anwenden & Neu laden</button>
-                <button id="btnRandomModal" class="random-btn" onclick="generateRandomGame(true)">Zufall</button>
+                <button id="btnApply" onclick="startGame(true)">💾 Speichern & Laden</button>
+                <button id="btnRandomModal" class="random-btn" onclick="generateRandomGame(true)">🎲 Zufall</button>
                 <button id="btnShareModal" class="share-btn" onclick="copyInviteCode(true)">🔗 Code</button>
             </div>
         </div>
@@ -306,312 +329,4 @@
 
     <script>
         let currentTotalPokemon = 0;
-        const typesDE = { "normal": "Normal", "fighting": "Kampf", "flying": "Flug", "poison": "Gift", "ground": "Boden", "rock": "Gestein", "bug": "Käfer", "ghost": "Geist", "steel": "Stahl", "fire": "Feuer", "water": "Wasser", "grass": "Pflanze", "electric": "Elektro", "psychic": "Psycho", "ice": "Eis", "dragon": "Drache", "dark": "Unlicht", "fairy": "Fee" };
-        
-        const gameRules = { 
-            "en": [ "Normal Game (No restrictions)", "No questions about Colors", "No questions about Types", "No questions about Evolutions", "No questions about Body Shape", "No questions about Region/Gen", "No questions about Starting Letter", "No questions about Size or Weight", "No questions about Weaknesses/Resistances", "No questions about Legendary Status" ], 
-            "de": [ "Normales Spiel (Keine Einschränkungen)", "Keine Fragen zur Farbe", "Keine Fragen zu den Typen", "Keine Fragen zu Entwicklungen", "Keine Fragen zur Körperform", "Keine Fragen zur Region/Generation", "Keine Fragen zum Anfangsbuchstaben", "Keine Fragen zu Größe oder Gewicht", "Keine Fragen zu Schwächen oder Resistenzen", "Keine Fragen zum Status (Legendär/Mystisch)" ] 
-        };
-        const generations = { "1": { min: 1, max: 151 }, "2": { min: 152, max: 251 }, "3": { min: 252, max: 386 }, "4": { min: 387, max: 493 }, "5": { min: 494, max: 649 }, "6": { min: 650, max: 721 }, "7": { min: 722, max: 809 }, "8": { min: 810, max: 898 }, "9": { min: 899, max: 1025 } };
-
-        function openModal() { document.getElementById('settingsModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('settingsModal').style.display = 'none'; }
-        window.onclick = function(e) { if (e.target == document.getElementById('settingsModal')) closeModal(); }
-        document.getElementById('modalGenCheckboxes').innerHTML = document.getElementById('startGenCheckboxes').innerHTML;
-
-        function getSettingsString(isModal) {
-            const pre = isModal ? 'modal' : 'start';
-            const seed = document.getElementById(pre+'Seed').value || Math.random().toString(36).substring(2, 8).toUpperCase();
-            if(!document.getElementById(pre+'Seed').value) document.getElementById(pre+'Seed').value = seed;
-            const count = document.getElementById(pre+'PokemonCount').value;
-            const lang = document.getElementById(pre+'Language').value;
-            const infoMode = document.getElementById(pre+'InfoMode').value;
-            const gens = Array.from(document.getElementById(pre+'GenCheckboxes').querySelectorAll('input:checked')).map(c => c.value).join(',');
-            return `PKMN-${btoa(`${seed}|${count}|${lang}|${infoMode}|${gens}`)}`;
-        }
-
-        function copyInviteCode(isModal) {
-            const gens = Array.from(document.getElementById((isModal ? 'modal' : 'start')+'GenCheckboxes').querySelectorAll('input:checked'));
-            if(gens.length === 0) {
-                alert(document.getElementById('startLanguage').value === 'de' ? "Bitte wähle mindestens eine Region aus!" : "Please select at least one region!");
-                return;
-            }
-            const code = getSettingsString(isModal);
-            navigator.clipboard.writeText(code).then(() => {
-                const toast = document.getElementById("toast");
-                toast.innerText = document.getElementById('startLanguage').value === 'de' ? "🔗 Invite-Code kopiert!" : "🔗 Invite code copied!";
-                toast.className = "show";
-                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-            });
-        }
-
-        function checkInviteCode(val, isModal) {
-            val = val.trim();
-            if (val.startsWith('PKMN-')) {
-                try {
-                    const encoded = val.substring(5);
-                    const decoded = atob(encoded);
-                    const parts = decoded.split('|');
-                    
-                    if (parts.length === 5) {
-                        const pre = isModal ? 'modal' : 'start';
-                        document.getElementById(pre+'Seed').value = parts[0];
-                        document.getElementById(pre+'PokemonCount').value = parts[1];
-                        document.getElementById(pre+'Language').value = parts[2];
-                        document.getElementById(pre+'InfoMode').value = parts[3];
-                        
-                        const gens = parts[4].split(',');
-                        const cbs = document.getElementById(pre+'GenCheckboxes').querySelectorAll('input[type="checkbox"]');
-                        cbs.forEach(cb => cb.checked = gens.includes(cb.value));
-                        
-                        updateUITexts();
-                        
-                        const toast = document.getElementById("toast");
-                        toast.innerText = parts[2] === 'de' ? "✅ Einstellungen aus Code geladen!" : "✅ Settings loaded from code!";
-                        toast.className = "show";
-                        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-                    }
-                } catch (e) {
-                    // Invalid base64, ignore
-                }
-            }
-        }
-
-        function updateUITexts() {
-            const lang = document.getElementById('startScreen').style.display !== 'none' ? document.getElementById('startLanguage').value : document.getElementById('modalLanguage').value;
-            document.getElementById('startLanguage').value = lang; document.getElementById('modalLanguage').value = lang;
-
-            if (lang === 'de') {
-                document.getElementById('uiTitle').innerText = "Wer ist das Pokémon?";
-                document.getElementById('uiDesc').innerText = "Gib ein gemeinsames Geheimwort ein, um das gleiche Feld zu generieren!";
-                document.getElementById('lblSeedStart').innerText = "Geheimwort ODER Invite-Code";
-                document.getElementById('lblAmountStart').innerText = "Anzahl der Pokémon";
-                document.getElementById('lblInfoStart').innerText = "Zusatz-Infos (Typen, Gen, Maße)";
-                document.getElementById('optHoverStart').innerText = "Als Tooltip an der Maus (Kein Scrollen)";
-                document.getElementById('optAlwaysStart').innerText = "In der Karte (Scrollen erforderlich)";
-                document.getElementById('optLgStart').innerText = "48 Pokémon (Groß)";
-                document.getElementById('optXlStart').innerText = "64 Pokémon (Riesig)";
-                document.getElementById('lblRegionsStart').innerText = "Regionen (Beliebig kombinierbar)";
-                document.getElementById('btnStartGame').innerText = "Spiel starten";
-                document.getElementById('btnRandomSeed').innerText = "Zufälliger Seed";
-                document.getElementById('btnShare').innerText = "🔗 Invite-Code kopieren";
-                document.getElementById('headerShareBtn').innerText = "🔗 Code kopieren";
-                document.getElementById('settingsBtn').innerText = "Einstellungen";
-                
-                document.getElementById('supportText').innerText = "Dir gefällt das Spiel? Unterstütze mich gerne freiwillig:";
-                document.getElementById('supportLink').innerText = "☕ PayPal Spende";
-
-                document.getElementById('modalTitleText').innerText = "Einstellungen";
-                document.getElementById('lblSeedModal').innerText = "Geheimwort ODER Invite-Code";
-                document.getElementById('lblAmountModal').innerText = "Anzahl der Pokémon";
-                document.getElementById('lblInfoModal').innerText = "Zusatz-Infos";
-                document.getElementById('optHoverModal').innerText = "Als Tooltip";
-                document.getElementById('optAlwaysModal').innerText = "In der Karte";
-                document.getElementById('lblRegionsModal').innerText = "Regionen";
-                document.getElementById('btnApply').innerText = "Anwenden & Neu laden";
-                document.getElementById('btnRandomModal').innerText = "Zufall";
-                document.getElementById('btnShareModal').innerText = "🔗 Code";
-                document.getElementById('loading').innerText = "Pokédex durchsucht die Datenbank...";
-            } else {
-                document.getElementById('uiTitle').innerText = "Who's that Pokémon?";
-                document.getElementById('uiDesc').innerText = "Enter a shared seed to play on the exact same board!";
-                document.getElementById('lblSeedStart').innerText = "Secret Word OR Invite Code";
-                document.getElementById('lblAmountStart').innerText = "Amount of Pokémon";
-                document.getElementById('lblInfoStart').innerText = "Card Info (Types, Gen, Size)";
-                document.getElementById('optHoverStart').innerText = "As Mouse Tooltip (No scrolling)";
-                document.getElementById('optAlwaysStart').innerText = "Inside Card (Requires scrolling)";
-                document.getElementById('optLgStart').innerText = "48 Pokémon (Large)";
-                document.getElementById('optXlStart').innerText = "64 Pokémon (Massive)";
-                document.getElementById('lblRegionsStart').innerText = "Regions (Combine as you like)";
-                document.getElementById('btnStartGame').innerText = "Start Game";
-                document.getElementById('btnRandomSeed').innerText = "Random Seed";
-                document.getElementById('btnShare').innerText = "🔗 Copy Invite Code";
-                document.getElementById('headerShareBtn').innerText = "🔗 Copy Code";
-                document.getElementById('settingsBtn').innerText = "Settings";
-
-                document.getElementById('supportText').innerText = "Enjoying the game? Feel free to support me:";
-                document.getElementById('supportLink').innerText = "☕ Support via PayPal";
-
-                document.getElementById('modalTitleText').innerText = "Game Settings";
-                document.getElementById('lblSeedModal').innerText = "Secret Word OR Invite Code";
-                document.getElementById('lblAmountModal').innerText = "Amount of Pokémon";
-                document.getElementById('lblInfoModal').innerText = "Card Info";
-                document.getElementById('optHoverModal').innerText = "As Tooltip";
-                document.getElementById('optAlwaysModal').innerText = "Inside Card";
-                document.getElementById('lblRegionsModal').innerText = "Regions";
-                document.getElementById('btnApply').innerText = "Apply & Reload";
-                document.getElementById('btnRandomModal').innerText = "Random";
-                document.getElementById('btnShareModal').innerText = "🔗 Code";
-                document.getElementById('loading').innerText = "Pokédex is searching the database...";
-            }
-        }
-
-        function cyrb128(str) {
-            let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
-            for (let i = 0, k; i < str.length; i++) {
-                k = str.charCodeAt(i); h1 = h2 ^ Math.imul(h1 ^ k, 597399067); h2 = h3 ^ Math.imul(h2 ^ k, 2869860233); h3 = h4 ^ Math.imul(h3 ^ k, 951274213); h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
-            }
-            h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067); h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233); h3 = Math.imul(h1 ^ (h3 >>> 17), 2716044179); h4 = Math.imul(h2 ^ (h4 >>> 19), 3144134277);
-            return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
-        }
-        function sfc32(a, b, c, d) { return function() { a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; var t = (a + b | 0) + d | 0; d = d + 1 | 0; a = b ^ b >>> 9; b = c + (c << 3) | 0; c = (c << 21 | c >>> 11); c = c + t | 0; return (t >>> 0) / 4294967296; } }
-
-        function calculateOptimalGrid(total) {
-            const wrapper = document.getElementById('gridWrapper');
-            const w = wrapper.clientWidth, h = wrapper.clientHeight;
-            if (w === 0 || h === 0) return;
-            
-            let bestC = 1, bestR = total, maxSize = 0;
-            for (let c = 1; c <= total; c++) {
-                let r = Math.ceil(total / c);
-                let sw = w / c, sh = h / r;
-                let effW = Math.min(sw, sh / 1.1);
-                if (effW > maxSize) { maxSize = effW; bestC = c; bestR = r; }
-            }
-            document.documentElement.style.setProperty('--cols', bestC);
-            document.documentElement.style.setProperty('--rows', bestR);
-        }
-        window.addEventListener('resize', () => calculateOptimalGrid(currentTotalPokemon));
-
-        async function startGame(isModal) {
-            const pre = isModal ? 'modal' : 'start';
-            const seed = document.getElementById(pre+'Seed').value;
-            const count = parseInt(document.getElementById(pre+'PokemonCount').value);
-            const lang = document.getElementById(pre+'Language').value;
-            const infoMode = document.getElementById(pre+'InfoMode').value;
-            const gens = Array.from(document.getElementById(pre+'GenCheckboxes').querySelectorAll('input:checked')).map(c => c.value);
-            
-            if (!seed || gens.length === 0) { alert(lang === 'de' ? "Geheimwort/Code & Region erforderlich!" : "Seed/Code & Region required!"); return; }
-            
-            currentTotalPokemon = count;
-            document.getElementById('startSeed').value = seed; document.getElementById('modalSeed').value = seed;
-            document.getElementById('startPokemonCount').value = count; document.getElementById('modalPokemonCount').value = count;
-            document.getElementById('startInfoMode').value = infoMode; document.getElementById('modalInfoMode').value = infoMode;
-            
-            const sourceCbs = document.getElementById(pre+'GenCheckboxes').querySelectorAll('input[type="checkbox"]');
-            const targetCbs = document.getElementById((isModal ? 'start' : 'modal') + 'GenCheckboxes').querySelectorAll('input[type="checkbox"]');
-            sourceCbs.forEach((cb, index) => { targetCbs[index].checked = cb.checked; });
-
-            if (isModal) closeModal();
-
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('settingsBtn').style.display = 'block';
-            document.getElementById('headerShareBtn').style.display = 'block';
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('mainGameArea').style.display = 'none';
-
-            const board = document.getElementById('board');
-            board.className = 'grid ' + (infoMode === 'always' ? 'info-always' : '');
-
-            const pool = [];
-            gens.forEach(g => { for(let i=generations[g].min; i<=generations[g].max; i++) pool.push(i); });
-            const rand = sfc32(...cyrb128(seed));
-            const cards = []; const used = new Set();
-            while(cards.length < count) {
-                const id = pool[Math.floor(rand() * pool.length)];
-                if(!used.has(id)) { used.add(id); cards.push({id, shiny: rand() < 0.05}); }
-            }
-
-            const pokes = await Promise.all(cards.map(c => fetch(`https://pokeapi.co/api/v2/pokemon/${c.id}`).then(r => r.json())));
-            board.innerHTML = '';
-            
-            const targetIdx = Math.floor(Math.random() * pokes.length);
-            const targetPoke = pokes[targetIdx];
-            const targetIsShiny = cards[targetIdx].shiny;
-
-            pokes.forEach((p, i) => {
-                const card = document.createElement('div');
-                card.className = 'card' + (i === targetIdx ? ' my-target' : '');
-                card.onclick = () => card.classList.toggle('eliminated');
-                
-                const isShiny = cards[i].shiny;
-                let imgUrl = p.sprites.other['official-artwork'].front_default;
-                if(isShiny) imgUrl = p.sprites.other['official-artwork'].front_shiny || p.sprites.front_shiny || imgUrl;
-                
-                const bName = (lang==='de' && typeof pokemonNamesDE!=='undefined') ? pokemonNamesDE[p.id] : p.name;
-                const wiki = lang==='de' ? `https://www.pokewiki.de/${encodeURIComponent(bName)}` : `https://bulbapedia.bulbagarden.net/wiki/${p.name}_(Pok%C3%A9mon)`;
-                const tStr = p.types.map(t => lang==='de' ? typesDE[t.type.name] : t.type.name).join(' / ');
-                const genKey = Object.keys(generations).find(g=>p.id>=generations[g].min && p.id<=generations[g].max);
-                const heightStr = (p.height/10).toFixed(1);
-                const weightStr = (p.weight/10).toFixed(1);
-
-                if (infoMode === 'always') {
-                    card.innerHTML = `
-                        <div class="card-header"><span class="gen-badge">Gen ${genKey}</span><a href="${wiki}" target="_blank" class="id-link" onclick="event.stopPropagation()">#${p.id}</a></div>
-                        <img src="${imgUrl}">
-                        <div class="name">${isShiny?'✨ ':''}${bName}</div>
-                        <div class="types">${tStr}</div>
-                        <div class="card-size">${lang==='de'?'Größe':'Size'}: ${heightStr}m | ${lang==='de'?'Gewicht':'Weight'}: ${weightStr}kg</div>
-                    `;
-                } else {
-                    card.innerHTML = `
-                        <div class="card-header" style="justify-content: flex-end;"><a href="${wiki}" target="_blank" class="id-link" onclick="event.stopPropagation()">#${p.id}</a></div>
-                        <img src="${imgUrl}">
-                        <div class="name">${isShiny?'✨ ':''}${bName}</div>
-                    `;
-                }
-                
-                card.addEventListener('mouseenter', (e) => {
-                    const tt = document.getElementById('mouseTooltip');
-                    if (infoMode === 'always') {
-                        tt.innerHTML = `
-                            <div class="t-big-title">${isShiny?'✨ ':''}${bName}</div>
-                            <img src="${imgUrl}" style="width: 180px; height: 180px; object-fit: contain; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
-                        `;
-                    } else {
-                        tt.innerHTML = `<span class="t-gen">Gen ${genKey} - #${p.id}</span><span class="t-types">${tStr}</span><span class="t-size">📏 ${heightStr}m | ⚖️ ${weightStr}kg</span>`;
-                    }
-                    tt.style.display = 'block';
-                });
-                
-                card.addEventListener('mousemove', (e) => {
-                    const tt = document.getElementById('mouseTooltip');
-                    let x = e.clientX + 15;
-                    let y = e.clientY + 15;
-                    
-                    const rect = tt.getBoundingClientRect();
-                    const clientWidth = document.documentElement.clientWidth;
-                    const clientHeight = document.documentElement.clientHeight;
-                    
-                    if (x + rect.width > clientWidth) x = clientWidth - rect.width - 10;
-                    if (y + rect.height > clientHeight) y = clientHeight - rect.height - 10;
-                    
-                    tt.style.left = x + 'px';
-                    tt.style.top = y + 'px';
-                });
-                
-                card.addEventListener('mouseleave', () => { document.getElementById('mouseTooltip').style.display = 'none'; });
-                
-                board.appendChild(card);
-            });
-
-            const tName = (lang==='de' && typeof pokemonNamesDE!=='undefined') ? pokemonNamesDE[targetPoke.id] : targetPoke.name;
-            const tGen = Object.keys(generations).find(g=>targetPoke.id>=generations[g].min && targetPoke.id<=generations[g].max);
-            const tTypes = targetPoke.types.map(t => lang==='de' ? typesDE[t.type.name] : t.type.name).join(' / ');
-            
-            document.getElementById('notesArea').value = lang === 'de' ? 
-                `MEIN POKÉMON:\nName: ${tName}\nNr: #${targetPoke.id}\nRegion: Gen ${tGen}\nTyp: ${tTypes}\nGröße: ${(targetPoke.height/10).toFixed(1)}m\nGewicht: ${(targetPoke.weight/10).toFixed(1)}kg\nShiny: ${targetIsShiny?'Ja ✨':'Nein'}\n\nHINWEISE:\n` :
-                `MY POKÉMON:\nName: ${targetPoke.name}\nID: #${targetPoke.id}\nGen: ${tGen}\nTypes: ${tTypes}\nSize: ${(targetPoke.height/10).toFixed(1)}m\nWeight: ${(targetPoke.weight/10).toFixed(1)}kg\nShiny: ${targetIsShiny?'Yes ✨':'No'}\n\nNOTES:\n`;
-
-            document.getElementById('targetTitle').innerText = lang === 'de' ? 'Dein Pokémon:' : 'You are:';
-            document.getElementById('ruleTitle').innerText = lang === 'de' ? 'Sonderregel' : 'Special Rule';
-            document.getElementById('notesTitle').innerText = lang === 'de' ? 'Notizen' : 'Notes';
-            
-            document.getElementById('ruleText').textContent = gameRules[lang][Math.floor(rand() * gameRules[lang].length)];
-            document.getElementById('targetInfo').innerHTML = `<img src="${targetIsShiny?targetPoke.sprites.front_shiny:targetPoke.sprites.front_default}" style="width:35px;height:35px;background:white;border-radius:50%;"><div class="name">${targetIsShiny?'✨ ':''}${tName}</div>`;
-            
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameInfoContainer').style.display = 'flex';
-            document.getElementById('mainGameArea').style.display = 'flex';
-            calculateOptimalGrid(count);
-        }
-
-        function generateRandomGame(isModal) {
-            const s = Math.random().toString(36).substring(2, 8).toUpperCase();
-            document.getElementById((isModal?'modal':'start')+'Seed').value = s;
-        }
-
-        updateUITexts();
-    </script>
-</body>
-</html>
+        const typesDE = { "normal": "Normal", "
