@@ -8,11 +8,14 @@
     <script src="pokemon_de.js"></script>
 
     <style>
-        body {
+                body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2c3e50; color: #333; margin: 0; padding: 2vmin; height: 100vh; width: 100vw;
+            background-color: #2c3e50; color: #333; margin: 0; padding: 2vmin; 
+            height: 100dvh; /* "dvh" berechnet die Adressleiste auf dem Handy mit ein! */
+            width: 100vw;
             box-sizing: border-box; display: flex; justify-content: center; overflow: hidden; 
         }
+
         
         .pokedex {
             background-color: #dc0a2d; width: 100%; max-width: 1600px; height: 100%; border-radius: 15px; padding: 15px;
@@ -149,10 +152,10 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Media Queries für Mobile */
+        /* Ma Queries für Mobile */
         @media (max-width: 768px) {
             body { padding: 0; }
-            .pokedex { border-radius: 0; border: none; padding: 10px; }
+            .pokedex { border-radius: 0; border: none; padding: 10px; height: 100dvh; box-sizing: border-box; }
             .screen-container { padding: 10px; border-width: 2px;}
             .start-screen { padding: 15px; width: 100%; box-sizing: border-box; border: none;}
             .start-screen h1 { font-size: 22px; }
