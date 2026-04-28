@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wer bin ich? – Deluxe</title>
+<title>Wer bin ich?</title>
 
 <style>
 body {
@@ -17,10 +17,7 @@ body {
   height:100vh;
 }
 
-.container {
-  width:95%;
-  max-width:900px;
-}
+.container { width:95%; max-width:900px; }
 
 .panel {
   background:white;
@@ -59,8 +56,6 @@ button {
   cursor:pointer;
 }
 
-button:hover { background:#2980b9; }
-
 .topbar {
   display:flex;
   justify-content:space-between;
@@ -83,29 +78,20 @@ button:hover { background:#2980b9; }
 <div id="menu" class="panel">
   <h1 id="title">Wer bin ich? 🔍</h1>
 
-  <input id="name" placeholder="Dein Name"><br>
-  <input id="seed" placeholder="Geheimwort / Code"><br>
+  <input id="playerName" placeholder="Dein Name"><br>
+  <input id="seedInput" placeholder="Geheimwort / Code"><br>
 
-  <select id="count">
-    <option value="16">16 Pokémon</option>
-    <option value="24" selected>24 Pokémon</option>
-    <option value="36">36 Pokémon</option>
-  </select><br>
-
-  <select id="lang" onchange="updateLang()">
+  <select id="lang">
     <option value="de">Deutsch</option>
     <option value="en">English</option>
   </select><br>
 
-  <button onclick="startGame()" id="startBtn">🚀 Start</button>
-  <button onclick="randomGame()">🎲 Zufall</button>
-  <button onclick="copyCode()">🔗 Code</button>
+  <button onclick="startGame()">🚀 Start</button>
 </div>
 
 <div id="game" style="display:none;">
   <div class="topbar">
     <button onclick="back()">⬅</button>
-    <button onclick="copyCode()">🔗</button>
   </div>
 
   <div id="target" class="target"></div>
@@ -116,20 +102,6 @@ button:hover { background:#2980b9; }
 
 <script>
 let seedValue = 0;
-let currentLang = "de";
-
-// Sprache
-function updateLang(){
-  currentLang = document.getElementById("lang").value;
-
-  if(currentLang==="de"){
-    title.innerText="Wer bin ich? 🔍";
-    startBtn.innerText="🚀 Spiel starten";
-  } else {
-    title.innerText="Who am I? 🔍";
-    startBtn.innerText="🚀 Start Game";
-  }
-}
 
 // Hash
 function hash(str){
@@ -149,38 +121,7 @@ function rand(){
   return ((t^t>>>14)>>>0)/4294967296;
 }
 
-// Invite
-function encode(seed,count){
-  return "PKMN-"+btoa(seed+"|"+count);
-}
-
-function decode(code){
-  try{
-    let txt=atob(code.replace("PKMN-",""));
-    let [s,c]=txt.split("|");
-    return {s,c};
-  }catch{return null;}
-}
-
-function copyCode(){
-  let seed=document.getElementById("seed").value||"random";
-  let count=document.getElementById("count").value;
-  navigator.clipboard.writeText(encode(seed,count));
-  alert("Copied!");
-}
-
-function randomGame(){
-  let s=Math.random().toString(36).substring(2,6).toUpperCase();
-  document.getElementById("seed").value=s;
-  startGame();
-}
-
-function back(){
-  game.style.display="none";
-  menu.style.display="block";
-}
-
-// 🔥 DEUTSCHE NAMEN über API
+// Deutsche Namen
 async function getGermanName(id){
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
   let data = await res.json();
@@ -188,55 +129,52 @@ async function getGermanName(id){
   return de ? de.name : data.name;
 }
 
+// Back
+function back(){
+  document.getElementById("game").style.display="none";
+  document.getElementById("menu").style.display="block";
+}
+
 // Start
 async function startGame(){
 
-  let player=name.value.trim();
+  const player = document.getElementById("playerName").value.trim();
+  const seedInput = document.getElementById("seedInput").value.trim();
+  const lang = document.getElementById("lang").value;
+
   if(!player){
-    alert(currentLang==="de"?"Name fehlt":"Enter name");
+    alert(lang==="de"?"Bitte Name eingeben":"Enter name");
     return;
   }
 
-  let seedInput=seed.value.trim();
-  let count=parseInt(document.getElementById("count").value);
+  seedValue = hash(seedInput || "random");
 
-  if(seedInput.startsWith("PKMN-")){
-    let d=decode(seedInput);
-    if(d){
-      seedInput=d.s;
-      count=d.c;
-    }
-  }
+  document.getElementById("menu").style.display="none";
+  document.getElementById("game").style.display="block";
 
-  if(!seedInput) seedInput="random"+Math.random();
-
-  seedValue=hash(seedInput);
-
-  menu.style.display="none";
-  game.style.display="block";
-
-  let ids=[];
+  let ids = [];
   for(let i=1;i<=151;i++) ids.push(i);
 
   ids.sort(()=>rand()-0.5);
-  ids=ids.slice(0,count);
+  ids = ids.slice(0, 24);
 
-  board.innerHTML="Loading...";
+  const board = document.getElementById("board");
+  board.innerHTML = "Loading...";
 
-  let data=[];
+  let data = [];
 
   for(let id of ids){
-    let res=await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    let p=await res.json();
+    let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+    let p = await res.json();
 
-    let nameFinal = currentLang==="de"
+    let displayName = lang==="de"
       ? await getGermanName(id)
       : p.name;
 
-    data.push({...p, displayName:nameFinal});
+    data.push({...p, displayName});
   }
 
-  board.innerHTML="";
+  board.innerHTML = "";
 
   data.forEach(p=>{
     let card=document.createElement("div");
@@ -248,15 +186,17 @@ async function startGame(){
     `;
 
     card.onclick=()=>card.classList.toggle("off");
+
     board.appendChild(card);
   });
 
+  // Multiplayer Ziel
   let playerSeed = hash(seedInput + player);
   let targetIndex = Math.abs(playerSeed) % data.length;
   let target = data[targetIndex];
 
-  targetDiv.innerHTML =
-    (currentLang==="de"?"Du bist: ":"You are: ")
+  document.getElementById("target").innerHTML =
+    (lang==="de"?"Du bist: ":"You are: ")
     + "<b>"+target.displayName+"</b>";
 }
 </script>
