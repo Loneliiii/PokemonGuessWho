@@ -13,21 +13,17 @@ body {
   color:white;
 }
 
-/* 📱 Wichtig: Scroll erlauben */
 html, body {
   height:100%;
   overflow:auto;
 }
 
-/* Pokédex Gehäuse */
 .pokedex {
   background:#c0392b;
   min-height:100vh;
   padding:15px;
-  box-sizing:border-box;
 }
 
-/* Screen */
 .screen {
   background:#ecf0f1;
   border-radius:15px;
@@ -37,7 +33,6 @@ html, body {
   margin:auto;
 }
 
-/* Grid */
 .grid {
   display:grid;
   grid-template-columns: repeat(auto-fill,minmax(90px,1fr));
@@ -45,7 +40,6 @@ html, body {
   margin-top:10px;
 }
 
-/* Cards */
 .card {
   background:white;
   border-radius:10px;
@@ -55,18 +49,10 @@ html, body {
   font-size:12px;
 }
 
-.card img {
-  width:72px;
-}
+.card img { width:72px; }
+.card.off { opacity:0.3; }
 
-.card.off {
-  opacity:0.3;
-}
-
-/* Top */
-.top {
-  text-align:center;
-}
+.top { text-align:center; }
 
 .target {
   background:#2ecc71;
@@ -75,7 +61,6 @@ html, body {
   margin:10px 0;
 }
 
-/* Menü */
 input, select, button {
   padding:10px;
   margin:5px;
@@ -93,20 +78,19 @@ button {
   opacity:0.6;
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="pokedex">
 
-<!-- Menü -->
+<!-- MENU -->
 <div id="menu" class="screen top">
   <h2>Wer bin ich? 🔍</h2>
-  <div class="version" id="version"></div>
+  <div id="version" class="version"></div>
 
   <input id="playerName" placeholder="Dein Name"><br>
-  <input id="seedInput" placeholder="Code"><br>
+  <input id="seedInput" placeholder="Seed / Code"><br>
 
   <select id="lang">
     <option value="de">Deutsch</option>
@@ -116,10 +100,9 @@ button {
   <button onclick="startGame()">Start</button>
 </div>
 
-<!-- Spiel -->
+<!-- GAME -->
 <div id="game" class="screen" style="display:none;">
   <button onclick="back()">⬅ Back</button>
-
   <div id="target" class="target"></div>
   <div id="board" class="grid"></div>
 </div>
@@ -127,12 +110,12 @@ button {
 </div>
 
 <script>
-const VERSION = "v2.0.0";
-
+const VERSION = "v2.1.0";
 document.getElementById("version").innerText = VERSION;
 
 let seedValue = 0;
 
+// HASH
 function hash(str){
   let h=0;
   for(let i=0;i<str.length;i++){
@@ -141,6 +124,7 @@ function hash(str){
   return h;
 }
 
+// RNG (seeded)
 function rand(){
   seedValue+=0x6D2B79F5;
   let t=seedValue;
@@ -149,6 +133,15 @@ function rand(){
   return ((t^t>>>14)>>>0)/4294967296;
 }
 
+// 🔥 RICHTIGES SHUFFLE (deterministisch)
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    let j = Math.floor(rand()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+}
+
+// 🇩🇪 Namen
 async function getGermanName(id){
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
   let data = await res.json();
@@ -156,11 +149,13 @@ async function getGermanName(id){
   return de ? de.name : data.name;
 }
 
+// BACK
 function back(){
   document.getElementById("game").style.display="none";
   document.getElementById("menu").style.display="block";
 }
 
+// START
 async function startGame(){
 
   const player = document.getElementById("playerName").value.trim();
@@ -180,7 +175,8 @@ async function startGame(){
   let ids = [];
   for(let i=1;i<=151;i++) ids.push(i);
 
-  ids.sort(()=>rand()-0.5);
+  // 🔥 FIXED
+  shuffle(ids);
   ids = ids.slice(0, 24);
 
   const board = document.getElementById("board");
@@ -211,10 +207,10 @@ async function startGame(){
     `;
 
     card.onclick=()=>card.classList.toggle("off");
-
     board.appendChild(card);
   });
 
+  // 👥 Spielerabhängig
   let playerSeed = hash(seedInput + player);
   let targetIndex = Math.abs(playerSeed) % data.length;
   let target = data[targetIndex];
