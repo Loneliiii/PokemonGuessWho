@@ -4,7 +4,176 @@
 <meta charset="UTF-8">
 <title>Pokemon P2P Battle</title>
 
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+<script>
+let peer, conn;
+let myName, myCards = [], selected = null;
+let opponentMove = null;
+
+// CREATE GAME
+function createGame(){
+  myName = document.getElementById("name").value;
+
+  if(!myName){
+    alert("Enter name!");
+    return;
+  }
+
+  peer = new Peer();
+
+  peer.on('open', id => {
+    console.log("HOST ID:", id);
+    alert("Your Code: " + id);
+    status.innerText = "Waiting for opponent...";
+  });
+
+  peer.on('connection', c => {
+    console.log("Opponent connected!");
+    conn = c;
+    setupConnection();
+  });
+
+  peer.on('error', err => {
+    console.error("Peer error:", err);
+    status.innerText = "Error!";
+  });
+}
+
+// JOIN GAME
+function joinGame(){
+  myName = document.getElementById("name").value;
+  let id = document.getElementById("joinId").value.trim();
+
+  if(!myName || !id){
+    alert("Enter name + code!");
+    return;
+  }
+
+  status.innerText = "Connecting...";
+
+  peer = new Peer();
+
+  peer.on('open', myId => {
+    console.log("MY ID:", myId);
+
+    conn = peer.connect(id);
+
+    conn.on('open', () => {
+      console.log("CONNECTED!");
+      status.innerText = "Connected!";
+      setupConnection();
+    });
+
+    conn.on('error', err => {
+      console.error("Connection error:", err);
+      status.innerText = "Connection failed!";
+    });
+  });
+
+  peer.on('error', err => {
+    console.error("Peer error:", err);
+    status.innerText = "Peer error!";
+  });
+}
+
+// SETUP CONNECTION
+function setupConnection(){
+
+  conn.on('data', data => {
+    console.log("Received:", data);
+
+    if(data.type === "move"){
+      opponentMove = data.card;
+      checkRound();
+    }
+  });
+
+  dealCards();
+}
+
+// DEAL CARDS
+async function dealCards(){
+  myCards = [];
+
+  for(let i=0;i<3;i++){
+    let id = Math.floor(Math.random()*151)+1;
+
+    let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+    let p = await res.json();
+
+    myCards.push({
+      name: p.name,
+      attack: p.stats[1].base_stat,
+      defense: p.stats[2].base_stat
+    });
+  }
+
+  renderCards();
+}
+
+// RENDER
+function renderCards(){
+  const cardsDiv = document.getElementById("cards");
+  cardsDiv.innerHTML="";
+
+  myCards.forEach((c,i)=>{
+    let div=document.createElement("div");
+    div.className="card";
+
+    div.innerHTML = `
+      <b>${c.name}</b><br>
+      ATK: ${c.attack}<br>
+      DEF: ${c.defense}
+    `;
+
+    div.onclick=()=>{
+      selected=i;
+      document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"));
+      div.classList.add("selected");
+    };
+
+    cardsDiv.appendChild(div);
+  });
+}
+
+// SEND MOVE
+function sendMove(){
+  if(selected===null){
+    alert("Pick a card!");
+    return;
+  }
+
+  let card = myCards[selected];
+
+  console.log("Sending:", card);
+
+  conn.send({ type:"move", card });
+
+  status.innerText = "Waiting for opponent...";
+}
+
+// CHECK ROUND
+function checkRound(){
+  if(!opponentMove) return;
+
+  let myCard = myCards[selected];
+
+  let myScore = myCard.attack + myCard.defense;
+  let oppScore = opponentMove.attack + opponentMove.defense;
+
+  setTimeout(()=>{
+    if(myScore > oppScore){
+      alert("You win!");
+    } else if(oppScore > myScore){
+      alert("You lose!");
+    } else {
+      alert("Draw!");
+    }
+  },200);
+
+  opponentMove = null;
+  selected = null;
+}
+</script>
 
 <style>
 body { font-family: Arial; text-align:center; background:#222; color:white; }
