@@ -1,3 +1,4 @@
+/* 🌌 BASE LAYOUT (MOBILE FIX INCLUDED) */
 body {
   margin:0;
   font-family: Arial;
@@ -12,13 +13,63 @@ body {
 
   overflow-y:auto;
 
-  background: linear-gradient(-45deg,#0d1117,#1f2937,#0d1117,#111827);
-  background-size:400% 400%;
+  /* 🌈 ANIMATED GRADIENT */
+  background: linear-gradient(
+    -45deg,
+    #0d1117,
+    #1f2937,
+    #0d1117,
+    #111827
+  );
+  background-size: 400% 400%;
   animation: gradientMove 12s ease infinite;
 }
 
+/* 🌊 Gradient Animation */
 @keyframes gradientMove {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ✨ GLOW ORBS */
+body::before,
+body::after {
+  content:"";
+  position:fixed;
+  width:350px;
+  height:350px;
+  border-radius:50%;
+  filter: blur(120px);
+  opacity:0.4;
+  z-index:-1;
+}
+
+/* 🔵 Blue Orb */
+body::before {
+  background:#58a6ff;
+  top:10%;
+  left:10%;
+  animation: float1 18s ease-in-out infinite;
+}
+
+/* 🟣 Purple Orb */
+body::after {
+  background:#9b59ff;
+  bottom:10%;
+  right:10%;
+  animation: float2 22s ease-in-out infinite;
+}
+
+/* Floating motion */
+@keyframes float1 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(60px,-40px); }
+  100% { transform: translate(0,0); }
+}
+
+@keyframes float2 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(-50px,50px); }
+  100% { transform: translate(0,0); }
 }
