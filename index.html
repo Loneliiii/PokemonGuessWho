@@ -10,13 +10,9 @@
 
 <style>
 
-/* Container */
-.container {
-  width:100%;
-  max-width:900px;
-}
+/* UI bleibt wie vorher */
+.container { width:100%; max-width:900px; }
 
-/* Panel */
 .panel {
   background:rgba(22,27,34,0.9);
   backdrop-filter: blur(10px);
@@ -25,7 +21,57 @@
   text-align:center;
 }
 
-/* Grid */
+.title {
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:10px;
+  background:linear-gradient(90deg,#58a6ff,#9b59ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+input, select {
+  width:90%;
+  max-width:320px;
+  padding:10px;
+  margin:8px;
+  border-radius:10px;
+  border:none;
+  background:#0d1117;
+  color:white;
+}
+
+.genbox {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+}
+
+.genbox label {
+  background:#21262d;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.genbox input { display:none; }
+
+.genbox input:checked + span {
+  background:#58a6ff;
+  color:black;
+}
+
+button {
+  margin-top:15px;
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  background:#238636;
+  color:white;
+  cursor:pointer;
+}
+
 .grid {
   display:grid;
   grid-template-columns: repeat(auto-fill,minmax(80px,1fr));
@@ -39,25 +85,16 @@
   cursor:pointer;
   transform:scale(0);
   opacity:0;
-  transition:0.3s ease;
+  transition:0.3s;
 }
 
-.card.show {
-  transform:scale(1);
-  opacity:1;
-}
+.card.show { transform:scale(1); opacity:1; }
 
-.card img {
-  width:64px;
-}
+.card img { width:64px; }
 
-/* TYPES */
-.types {
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:3px;
-}
+.card.off { opacity:0.3; transform:scale(0.9); }
+
+.types { display:flex; flex-wrap:wrap; justify-content:center; gap:3px; }
 
 .type {
   font-size:10px;
@@ -66,36 +103,36 @@
   color:white;
 }
 
-.normal{background:#A8A77A;}
+/* colors */
 .fire{background:#EE8130;}
 .water{background:#6390F0;}
 .grass{background:#7AC74C;}
 .electric{background:#F7D02C;color:black;}
-.ice{background:#96D9D6;}
-.fighting{background:#C22E28;}
-.poison{background:#A33EA1;}
-.ground{background:#E2BF65;color:black;}
-.flying{background:#A98FF3;}
-.psychic{background:#F95587;}
-.bug{background:#A6B91A;}
-.rock{background:#B6A136;}
-.ghost{background:#735797;}
-.dragon{background:#6F35FC;}
-.dark{background:#705848;}
-.steel{background:#B7B7CE;color:black;}
-.fairy{background:#D685AD;}
+.normal{background:#A8A77A;}
 
-/* DEBUG BOX */
-#debug {
-  position:fixed;
-  bottom:10px;
-  left:10px;
-  background:#000;
-  color:#0f0;
-  padding:5px;
-  font-size:10px;
-  max-width:90%;
+.target {
+  background:#238636;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
 }
+
+#intro {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#0d1117;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:36px;
+  opacity:0;
+  pointer-events:none;
+}
+
+#intro.show { opacity:1; transition:0.4s; }
 
 </style>
 </head>
@@ -105,53 +142,45 @@
 <div class="container">
 
 <div id="menu" class="panel">
-  <h2>Wer bin ich?</h2>
+  <div class="title">Wer bin ich?</div>
+
   <input id="seedInput" placeholder="Seed"><br>
+
+  <select id="lang">
+    <option value="de">Deutsch</option>
+    <option value="en">English</option>
+  </select>
+
+  <div class="genbox">
+    <label><input type="checkbox" value="1" checked><span>1</span></label>
+    <label><input type="checkbox" value="2" checked><span>2</span></label>
+    <label><input type="checkbox" value="3" checked><span>3</span></label>
+  </div>
 
   <button onclick="startGame()">Start</button>
 </div>
 
 <div id="game" class="panel" style="display:none;">
   <button onclick="back()">⬅ Neue Runde</button>
-  <div id="target"></div>
+  <div id="target" class="target"></div>
   <div id="board" class="grid"></div>
 </div>
 
 </div>
 
-<div id="debug"></div>
+<div id="intro"><span id="introText"></span></div>
 
 <script>
 let seedValue=0;
 
-/* FULL TYPE MAP */
 const TYPE_NAMES = {
   normal:{de:"Normal",en:"Normal"},
   fire:{de:"Feuer",en:"Fire"},
   water:{de:"Wasser",en:"Water"},
   grass:{de:"Pflanze",en:"Grass"},
-  electric:{de:"Elektro",en:"Electric"},
-  ice:{de:"Eis",en:"Ice"},
-  fighting:{de:"Kampf",en:"Fighting"},
-  poison:{de:"Gift",en:"Poison"},
-  ground:{de:"Boden",en:"Ground"},
-  flying:{de:"Flug",en:"Flying"},
-  psychic:{de:"Psycho",en:"Psychic"},
-  bug:{de:"Käfer",en:"Bug"},
-  rock:{de:"Gestein",en:"Rock"},
-  ghost:{de:"Geist",en:"Ghost"},
-  dragon:{de:"Drache",en:"Dragon"},
-  dark:{de:"Unlicht",en:"Dark"},
-  steel:{de:"Stahl",en:"Steel"},
-  fairy:{de:"Fee",en:"Fairy"}
+  electric:{de:"Elektro",en:"Electric"}
 };
 
-/* SAFE LOG */
-function log(msg){
-  document.getElementById("debug").innerText = msg;
-}
-
-/* RNG */
 function hash(str){
   let h=0;
   for(let i=0;i<str.length;i++){
@@ -168,83 +197,68 @@ function rand(){
   return ((t^t>>>14)>>>0)/4294967296;
 }
 
-/* SAFE IMAGE */
-function createImage(src){
-  let img=document.createElement("img");
-  img.src=src;
-  img.onerror=()=>{
-    img.src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
-  };
-  return img;
+function getGens(){
+  return Array.from(document.querySelectorAll(".genbox input:checked"))
+    .map(e=>parseInt(e.value));
 }
 
-/* START */
-function startGame(){
+async function startGame(){
 
-  try {
+  let seed = seedInput.value;
+  seedValue = hash(seed || "random");
 
-    seedValue = hash(seedInput.value || "random");
+  let gens = getGens();
+  let pool = POKEMON.filter(p=>gens.includes(p.gen));
 
-    let pool = Array.isArray(POKEMON) ? [...POKEMON] : [];
+  pool.sort(()=>rand()-0.5);
+  let data = pool.slice(0,24);
 
-    if(pool.length === 0){
-      log("❌ Pokemon data missing");
-      return;
-    }
+  // 🔥 FIX: eigener Spieler Seed
+  let playerId = Math.random().toString(36);
+  let target = data[Math.abs(hash(seed + playerId)) % data.length];
 
-    pool.sort(()=>rand()-0.5);
-    let data = pool.slice(0,24);
+  let name = target.name_en;
 
-    let target = data[Math.floor(rand()*data.length)];
+  // FIX targetDiv
+  let targetDiv = document.getElementById("target");
 
-    menu.style.display="none";
-    game.style.display="block";
+  menu.style.display="none";
 
-    board.innerHTML="";
+  introText.innerText=name;
+  intro.classList.add("show");
 
-    data.forEach((p,i)=>{
+  await new Promise(r=>setTimeout(r,1200));
 
-      try {
+  intro.classList.remove("show");
 
-        let card=document.createElement("div");
-        card.className="card";
+  game.style.display="block";
 
-        let name = p.name_en || "???";
-        let img = createImage(p.img || "");
+  let board=document.getElementById("board");
+  board.innerHTML="";
 
-        let typesHTML = (p.types || []).map(t=>{
-          let label = TYPE_NAMES[t]?.en || t || "?";
-          return `<span class="type ${t}">${label}</span>`;
-        }).join("");
+  data.forEach((p,i)=>{
+    let card=document.createElement("div");
+    card.className="card";
 
-        card.appendChild(img);
+    let typesHTML=(p.types||[]).map(t=>{
+      let label=TYPE_NAMES[t]?.en||t;
+      return `<span class="type ${t}">${label}</span>`;
+    }).join("");
 
-        let title=document.createElement("div");
-        title.innerText=name;
-        card.appendChild(title);
+    card.innerHTML=`
+      <img src="${p.img}">
+      <div>${p.name_en}</div>
+      <div class="types">${typesHTML}</div>
+    `;
 
-        let types=document.createElement("div");
-        types.className="types";
-        types.innerHTML=typesHTML;
-        card.appendChild(types);
+    card.onclick=()=>card.classList.toggle("off");
 
-        card.onclick=()=>card.classList.toggle("off");
+    board.appendChild(card);
 
-        board.appendChild(card);
+    setTimeout(()=>card.classList.add("show"), i*30);
+  });
 
-        setTimeout(()=>card.classList.add("show"), i*30);
-
-      } catch(e){
-        log("Card error: "+e);
-      }
-
-    });
-
-    targetDiv.innerText="You are: "+(target.name_en || "???");
-
-  } catch(e){
-    log("Fatal error: "+e);
-  }
+  targetDiv.innerText="You are: "+name;
 }
 
 function back(){
