@@ -142,7 +142,7 @@ input, select {
 
 #intro.show { opacity:1; transition:0.4s; }
 
-/* 🔥 POPUP */
+/* POPUP */
 #popup {
   position:fixed;
   top:0;left:0;
@@ -163,11 +163,7 @@ input, select {
 }
 
 .popup-box img { width:96px; }
-
-.popup-box a {
-  color:#58a6ff;
-  text-decoration:none;
-}
+.popup-box a { color:#58a6ff; }
 </style>
 </head>
 
@@ -220,14 +216,13 @@ input, select {
     <div id="popTypes"></div>
     <div id="popEvo"></div>
     <br>
-    <a id="popLink" target="_blank">PokéWiki öffnen</a>
+    <a id="popLink" target="_blank">PokéWiki</a>
     <br><br>
     <button onclick="closePopup()">Schließen</button>
   </div>
 </div>
 
 <script>
-
 let seedValue=0;
 let holdTimer=null;
 
@@ -253,7 +248,7 @@ function getGens(){
     .map(e=>parseInt(e.value));
 }
 
-/* Evolution (simple) */
+/* Evolution */
 function getEvolutionChain(pokemon){
   let chain=[pokemon];
   let next=POKEMON.find(p=>p.id===pokemon.id+1 && p.gen===pokemon.gen);
@@ -267,7 +262,7 @@ function getEvolutionChain(pokemon){
 
 /* Popup */
 function showPopup(p){
-  popup.style.display="flex";
+  document.getElementById("popup").style.display="flex";
 
   popImg.src=p.img;
   popName.innerText=p.name_de+" / "+p.name_en;
@@ -281,32 +276,31 @@ function showPopup(p){
 }
 
 function closePopup(){
-  popup.style.display="none";
+  document.getElementById("popup").style.display="none";
 }
 
 /* START */
 async function startGame(){
 
-  let lang=lang.value;
-  let seed=seedInput.value;
-  let playerId=playerInput.value||"player";
+  let lang=document.getElementById("lang").value;
+  let seed=document.getElementById("seedInput").value;
+  let playerId=document.getElementById("playerInput").value || "player";
 
   seedValue=hash(seed||"random");
 
   let pool=POKEMON.filter(p=>getGens().includes(p.gen));
 
-  // FIXED SHUFFLE
-  for (let i=pool.length-1;i>0;i--){
+  for(let i=pool.length-1;i>0;i--){
     let j=Math.floor(rand()*(i+1));
     [pool[i],pool[j]]=[pool[j],pool[i]];
   }
 
   let data=pool.slice(0,24);
 
-  let target=data[Math.abs(hash(seed+playerId))%data.length];
-  let name=lang==="de"?target.name_de:target.name_en;
+  let targetPokemon=data[Math.abs(hash(seed+playerId))%data.length];
+  let name=lang==="de"?targetPokemon.name_de:targetPokemon.name_en;
 
-  menu.style.display="none";
+  document.getElementById("menu").style.display="none";
 
   introText.innerText=name;
   intro.classList.add("show");
@@ -315,7 +309,10 @@ async function startGame(){
 
   intro.classList.remove("show");
 
-  game.style.display="block";
+  document.getElementById("game").style.display="block";
+
+  let board=document.getElementById("board");
+  let targetDiv=document.getElementById("target");
 
   board.innerHTML="";
 
@@ -333,10 +330,11 @@ async function startGame(){
 
     card.onclick=()=>card.classList.toggle("off");
 
-    // HOLD
-    card.onmousedown=card.ontouchstart=()=>{
+    card.onmousedown=card.ontouchstart=(e)=>{
+      e.preventDefault();
       holdTimer=setTimeout(()=>showPopup(p),500);
     };
+
     card.onmouseup=card.ontouchend=()=>clearTimeout(holdTimer);
 
     board.appendChild(card);
@@ -344,14 +342,14 @@ async function startGame(){
     setTimeout(()=>card.classList.add("show"),i*30);
   });
 
-  target.innerText=(lang==="de"?"Du bist: ":"You are: ")+name;
+  targetDiv.innerText =
+    (lang==="de"?"Du bist: ":"You are: ") + name;
 }
 
 function back(){
-  game.style.display="none";
-  menu.style.display="block";
+  document.getElementById("game").style.display="none";
+  document.getElementById("menu").style.display="block";
 }
-
 </script>
 
 </body>
