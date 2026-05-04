@@ -10,7 +10,7 @@
 
 <style>
 
-/* UI bleibt wie vorher */
+/* Layout */
 .container { width:100%; max-width:900px; }
 
 .panel {
@@ -21,6 +21,7 @@
   text-align:center;
 }
 
+/* Title */
 .title {
   font-size:28px;
   font-weight:bold;
@@ -30,6 +31,7 @@
   -webkit-text-fill-color:transparent;
 }
 
+/* Inputs */
 input, select {
   width:90%;
   max-width:320px;
@@ -41,6 +43,7 @@ input, select {
   color:white;
 }
 
+/* Gen Buttons */
 .genbox {
   display:flex;
   flex-wrap:wrap;
@@ -62,6 +65,7 @@ input, select {
   color:black;
 }
 
+/* Button */
 button {
   margin-top:15px;
   padding:12px 20px;
@@ -72,6 +76,7 @@ button {
   cursor:pointer;
 }
 
+/* Grid */
 .grid {
   display:grid;
   grid-template-columns: repeat(auto-fill,minmax(80px,1fr));
@@ -94,7 +99,13 @@ button {
 
 .card.off { opacity:0.3; transform:scale(0.9); }
 
-.types { display:flex; flex-wrap:wrap; justify-content:center; gap:3px; }
+/* TYPES */
+.types {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:3px;
+}
 
 .type {
   font-size:10px;
@@ -103,12 +114,25 @@ button {
   color:white;
 }
 
-/* colors */
+/* Colors */
+.normal{background:#A8A77A;}
 .fire{background:#EE8130;}
 .water{background:#6390F0;}
 .grass{background:#7AC74C;}
 .electric{background:#F7D02C;color:black;}
-.normal{background:#A8A77A;}
+.ice{background:#96D9D6;}
+.fighting{background:#C22E28;}
+.poison{background:#A33EA1;}
+.ground{background:#E2BF65;color:black;}
+.flying{background:#A98FF3;}
+.psychic{background:#F95587;}
+.bug{background:#A6B91A;}
+.rock{background:#B6A136;}
+.ghost{background:#735797;}
+.dragon{background:#6F35FC;}
+.dark{background:#705848;}
+.steel{background:#B7B7CE;color:black;}
+.fairy{background:#D685AD;}
 
 .target {
   background:#238636;
@@ -117,6 +141,7 @@ button {
   margin-bottom:10px;
 }
 
+/* INTRO */
 #intro {
   position:fixed;
   top:0;
@@ -151,10 +176,17 @@ button {
     <option value="en">English</option>
   </select>
 
+  <!-- 🔥 GEN 1–9 -->
   <div class="genbox">
-    <label><input type="checkbox" value="1" checked><span>1</span></label>
-    <label><input type="checkbox" value="2" checked><span>2</span></label>
-    <label><input type="checkbox" value="3" checked><span>3</span></label>
+    <label><input type="checkbox" value="1" checked><span>Gen 1</span></label>
+    <label><input type="checkbox" value="2" checked><span>Gen 2</span></label>
+    <label><input type="checkbox" value="3" checked><span>Gen 3</span></label>
+    <label><input type="checkbox" value="4" checked><span>Gen 4</span></label>
+    <label><input type="checkbox" value="5" checked><span>Gen 5</span></label>
+    <label><input type="checkbox" value="6" checked><span>Gen 6</span></label>
+    <label><input type="checkbox" value="7" checked><span>Gen 7</span></label>
+    <label><input type="checkbox" value="8" checked><span>Gen 8</span></label>
+    <label><input type="checkbox" value="9" checked><span>Gen 9</span></label>
   </div>
 
   <button onclick="startGame()">Start</button>
@@ -171,6 +203,7 @@ button {
 <div id="intro"><span id="introText"></span></div>
 
 <script>
+
 let seedValue=0;
 
 const TYPE_NAMES = {
@@ -178,7 +211,20 @@ const TYPE_NAMES = {
   fire:{de:"Feuer",en:"Fire"},
   water:{de:"Wasser",en:"Water"},
   grass:{de:"Pflanze",en:"Grass"},
-  electric:{de:"Elektro",en:"Electric"}
+  electric:{de:"Elektro",en:"Electric"},
+  ice:{de:"Eis",en:"Ice"},
+  fighting:{de:"Kampf",en:"Fighting"},
+  poison:{de:"Gift",en:"Poison"},
+  ground:{de:"Boden",en:"Ground"},
+  flying:{de:"Flug",en:"Flying"},
+  psychic:{de:"Psycho",en:"Psychic"},
+  bug:{de:"Käfer",en:"Bug"},
+  rock:{de:"Gestein",en:"Rock"},
+  ghost:{de:"Geist",en:"Ghost"},
+  dragon:{de:"Drache",en:"Dragon"},
+  dark:{de:"Unlicht",en:"Dark"},
+  steel:{de:"Stahl",en:"Steel"},
+  fairy:{de:"Fee",en:"Fairy"}
 };
 
 function hash(str){
@@ -204,23 +250,21 @@ function getGens(){
 
 async function startGame(){
 
-  let seed = seedInput.value;
-  seedValue = hash(seed || "random");
+  let lang=document.getElementById("lang").value;
 
-  let gens = getGens();
-  let pool = POKEMON.filter(p=>gens.includes(p.gen));
+  let seed=seedInput.value;
+  seedValue=hash(seed||"random");
+
+  let gens=getGens();
+  let pool=POKEMON.filter(p=>gens.includes(p.gen));
 
   pool.sort(()=>rand()-0.5);
-  let data = pool.slice(0,24);
+  let data=pool.slice(0,24);
 
-  // 🔥 FIX: eigener Spieler Seed
-  let playerId = Math.random().toString(36);
-  let target = data[Math.abs(hash(seed + playerId)) % data.length];
+  let playerId=Math.random().toString(36);
+  let target=data[Math.abs(hash(seed+playerId))%data.length];
 
-  let name = target.name_en;
-
-  // FIX targetDiv
-  let targetDiv = document.getElementById("target");
+  let name = lang==="de" ? target.name_de : target.name_en;
 
   menu.style.display="none";
 
@@ -234,20 +278,24 @@ async function startGame(){
   game.style.display="block";
 
   let board=document.getElementById("board");
+  let targetDiv=document.getElementById("target");
+
   board.innerHTML="";
 
   data.forEach((p,i)=>{
-    let card=document.createElement("div");
-    card.className="card";
+    let pname = lang==="de" ? p.name_de : p.name_en;
 
     let typesHTML=(p.types||[]).map(t=>{
-      let label=TYPE_NAMES[t]?.en||t;
+      let label=TYPE_NAMES[t]?.[lang] || t;
       return `<span class="type ${t}">${label}</span>`;
     }).join("");
 
+    let card=document.createElement("div");
+    card.className="card";
+
     card.innerHTML=`
       <img src="${p.img}">
-      <div>${p.name_en}</div>
+      <div>${pname}</div>
       <div class="types">${typesHTML}</div>
     `;
 
@@ -258,13 +306,16 @@ async function startGame(){
     setTimeout(()=>card.classList.add("show"), i*30);
   });
 
-  targetDiv.innerText="You are: "+name;
+  targetDiv.innerText =
+    (lang==="de"?"Du bist: ":"You are: ")
+    + name;
 }
 
 function back(){
   game.style.display="none";
   menu.style.display="block";
 }
+
 </script>
 
 </body>
