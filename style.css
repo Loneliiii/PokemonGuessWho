@@ -1,4 +1,4 @@
-/* 🌌 BASE LAYOUT (MOBILE FIX INCLUDED) */
+/* 🌌 BACKGROUND */
 body {
   margin:0;
   font-family: Arial;
@@ -9,67 +9,296 @@ body {
   align-items:flex-start;
 
   min-height:100vh;
-  padding:20px 10px;
+  padding:40px 10px;
 
-  overflow-y:auto;
-
-  /* 🌈 ANIMATED GRADIENT */
-  background: linear-gradient(
-    -45deg,
-    #0d1117,
-    #1f2937,
-    #0d1117,
-    #111827
-  );
-  background-size: 400% 400%;
-  animation: gradientMove 12s ease infinite;
+  background:
+    radial-gradient(circle at 20% 20%, #1f2937 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, #111827 0%, transparent 40%),
+    #0d1117;
 }
 
-/* 🌊 Gradient Animation */
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* 🎮 CONTAINER */
+.container {
+  width:100%;
+  max-width:1100px;
 }
 
-/* ✨ GLOW ORBS */
-body::before,
-body::after {
-  content:"";
+/* 🧊 PANEL */
+.panel {
+  background:rgba(22,27,34,0.85);
+  backdrop-filter: blur(14px);
+
+  border-radius:18px;
+  padding:20px;
+
+  box-shadow:
+    0 0 40px rgba(88,166,255,0.15),
+    0 10px 30px rgba(0,0,0,0.6);
+
+  text-align:center; /* 🔥 FIX */
+}
+
+/* 🎯 TITLE */
+.title {
+  font-size:30px;
+  margin-bottom:12px;
+
+  background:linear-gradient(90deg,#58a6ff,#9b59ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* 📝 TEXT */
+.desc {
+  font-size:14px;
+  opacity:0.75;
+  margin-bottom:12px;
+}
+
+.section-title {
+  margin-top:22px;
+  margin-bottom:10px;
+  font-size:13px;
+  opacity:0.6;
+}
+
+/* 🔘 BUTTONS */
+button {
+  padding:10px 18px;
+  border:none;
+  border-radius:999px;
+
+  background:linear-gradient(145deg,#58a6ff,#9b59ff);
+  color:black;
+
+  font-weight:bold;
+  cursor:pointer;
+
+  transition:0.2s;
+}
+
+button:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(88,166,255,0.5);
+}
+
+button:active {
+  transform:scale(0.95);
+}
+
+/* 🔲 INPUT */
+input, select {
+  width:90%;
+  max-width:320px;
+
+  padding:10px;
+  margin:8px;
+
+  border-radius:10px;
+  border:none;
+
+  background:#0d1117;
+  color:white;
+}
+
+/* 🔘 GEN + SIZE */
+.genbox {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+
+.genbox span {
+  padding:8px 14px;
+  border-radius:999px;
+
+  background:#1f2937;
+  transition:0.2s;
+}
+
+.genbox span:hover {
+  transform:translateY(-2px);
+}
+
+.genbox input { display:none; }
+
+.genbox input:checked + span {
+  background:linear-gradient(145deg,#58a6ff,#9b59ff);
+  color:black;
+  box-shadow:0 0 10px rgba(88,166,255,0.6);
+}
+
+/* 🎯 TOP BAR */
+#game .panel-top {
+  display:flex;
+  justify-content:center; /* 🔥 FIX */
+  align-items:center;
+  gap:15px;
+  margin-bottom:15px;
+  flex-wrap:wrap;
+}
+
+/* 🔍 ZOOM */
+.zoom-group {
+  display:flex;
+  gap:8px;
+}
+
+.zoom-group button {
+  width:40px;
+  height:40px;
+  padding:0;
+}
+
+/* 🧩 GRID */
+.grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(var(--tile-size,100px),1fr));
+  gap:14px;
+}
+
+/* 🧱 CARD */
+.card {
+  background:#21262d;
+  border-radius:14px;
+  padding:12px;
+
+  text-align:center;
+  cursor:pointer;
+
+  transition:0.2s;
+
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+
+.card:hover {
+  transform:translateY(-4px) scale(1.03);
+}
+
+.card img {
+  width:100%;
+  max-width:110px;
+  margin-bottom:6px;
+}
+
+.card.off {
+  opacity:0.25;
+  transform:scale(0.9);
+}
+
+/* ✨ SHINY */
+.card[data-shiny="true"] {
+  box-shadow:
+    0 0 10px gold,
+    0 0 25px rgba(255,215,0,0.4);
+}
+
+/* 🎬 INTRO */
+#intro {
   position:fixed;
-  width:350px;
-  height:350px;
-  border-radius:50%;
-  filter: blur(120px);
-  opacity:0.4;
-  z-index:-1;
+  width:100%;
+  height:100%;
+  background:#0d1117;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:42px;
+
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.6s;
 }
 
-/* 🔵 Blue Orb */
-body::before {
-  background:#58a6ff;
-  top:10%;
-  left:10%;
-  animation: float1 18s ease-in-out infinite;
+#intro.show { opacity:1; }
+
+#intro span {
+  transition:transform 0.6s, opacity 0.6s;
 }
 
-/* 🟣 Purple Orb */
-body::after {
-  background:#9b59ff;
-  bottom:10%;
-  right:10%;
-  animation: float2 22s ease-in-out infinite;
+#intro.hide span {
+  transform:scale(1.2);
+  opacity:0;
 }
 
-/* Floating motion */
-@keyframes float1 {
-  0% { transform: translate(0,0); }
-  50% { transform: translate(60px,-40px); }
-  100% { transform: translate(0,0); }
+/* ⚠️ RULE SCREEN */
+#rulesScreen {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:#0d1117;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  opacity:0;
+  pointer-events:none;
+  transition:0.4s;
+
+  z-index:999;
 }
 
-@keyframes float2 {
-  0% { transform: translate(0,0); }
-  50% { transform: translate(-50px,50px); }
-  100% { transform: translate(0,0); }
+#rulesScreen.show {
+  opacity:1;
+}
+
+.rules-box {
+  background:#161b22;
+  padding:30px;
+  border-radius:18px;
+
+  text-align:center;
+
+  transform:scale(0.8);
+  opacity:0;
+
+  transition:0.4s;
+
+  box-shadow:
+    0 0 30px rgba(255,0,0,0.25),
+    0 10px 40px rgba(0,0,0,0.8);
+}
+
+#rulesScreen.show .rules-box {
+  transform:scale(1);
+  opacity:1;
+}
+
+/* 🔥 ACTIVE RULE */
+.active-rule {
+  margin:10px 0 15px;
+  padding:8px 14px;
+
+  border-radius:999px;
+  display:inline-block;
+
+  background:rgba(255,77,77,0.15);
+  color:#ff6b6b;
+
+  font-size:13px;
+  font-weight:bold;
+}
+
+/* 🪟 POPUP */
+#popup {
+  position:fixed;
+  width:100%;
+  height:100%;
+
+  background:rgba(0,0,0,0.8);
+
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.popup-box {
+  background:#161b22;
+  padding:20px;
+  border-radius:16px;
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.7);
 }

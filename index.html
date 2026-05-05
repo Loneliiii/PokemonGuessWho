@@ -6,165 +6,9 @@
 <title>Wer bin ich?</title>
 
 <link rel="stylesheet" href="style.css">
+
 <script src="pokemon_data.js"></script>
-
-<style>
-.container { width:100%; max-width:900px; }
-
-.panel {
-  background:rgba(22,27,34,0.9);
-  backdrop-filter: blur(10px);
-  padding:20px;
-  border-radius:16px;
-  text-align:center;
-}
-
-.title {
-  font-size:28px;
-  margin-bottom:10px;
-  background:linear-gradient(90deg,#58a6ff,#9b59ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-input, select {
-  width:90%;
-  max-width:320px;
-  padding:10px;
-  margin:8px;
-  border-radius:10px;
-  border:none;
-  background:#0d1117;
-  color:white;
-}
-
-.genbox {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:6px;
-}
-
-.genbox label {
-  background:#21262d;
-  padding:6px 10px;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.genbox input { display:none; }
-
-.genbox input:checked + span {
-  background:#58a6ff;
-  color:black;
-}
-
-/* GRID */
-.grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(80px,1fr));
-  gap:10px;
-}
-
-.card {
-  background:#21262d;
-  padding:8px;
-  border-radius:10px;
-  cursor:pointer;
-  transform:scale(0);
-  opacity:0;
-  transition:0.3s;
-}
-
-.card.show { transform:scale(1); opacity:1; }
-
-.card img { width:64px; }
-
-.card.off { opacity:0.3; transform:scale(0.9); }
-
-/* TYPES */
-.types {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:3px;
-}
-
-.type {
-  font-size:10px;
-  padding:2px 6px;
-  border-radius:6px;
-  color:white;
-}
-
-/* COLORS */
-.normal{background:#A8A77A;}
-.fire{background:#EE8130;}
-.water{background:#6390F0;}
-.grass{background:#7AC74C;}
-.electric{background:#F7D02C;color:black;}
-.ice{background:#96D9D6;}
-.fighting{background:#C22E28;}
-.poison{background:#A33EA1;}
-.ground{background:#E2BF65;color:black;}
-.flying{background:#A98FF3;}
-.psychic{background:#F95587;}
-.bug{background:#A6B91A;}
-.rock{background:#B6A136;}
-.ghost{background:#735797;}
-.dragon{background:#6F35FC;}
-.dark{background:#705848;}
-.steel{background:#B7B7CE;color:black;}
-.fairy{background:#D685AD;}
-
-.target {
-  background:#238636;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
-/* INTRO */
-#intro {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#0d1117;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:36px;
-  opacity:0;
-  pointer-events:none;
-}
-
-#intro.show { opacity:1; transition:0.4s; }
-
-/* POPUP */
-#popup {
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.8);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-.popup-box {
-  background:#161b22;
-  padding:20px;
-  border-radius:16px;
-  max-width:320px;
-  text-align:center;
-}
-
-.popup-box img { width:96px; }
-.popup-box a { color:#58a6ff; }
-</style>
+<script src="evolution.js"></script>
 </head>
 
 <body>
@@ -174,6 +18,11 @@ input, select {
 <div id="menu" class="panel">
   <div class="title">Wer bin ich?</div>
 
+  <div class="desc">
+    Wähle deine Einstellungen und finde heraus, welches Pokémon du bist!<br>
+    Tippe, um Pokémon auszublenden – halte gedrückt für Infos.
+  </div>
+
   <input id="seedInput" placeholder="Seed"><br>
   <input id="playerInput" placeholder="Dein Name"><br>
 
@@ -182,6 +31,7 @@ input, select {
     <option value="en">English</option>
   </select>
 
+  <div class="section-title">Generationen</div>
   <div class="genbox">
     <label><input type="checkbox" value="1" checked><span>Gen 1</span></label>
     <label><input type="checkbox" value="2" checked><span>Gen 2</span></label>
@@ -194,12 +44,31 @@ input, select {
     <label><input type="checkbox" value="9" checked><span>Gen 9</span></label>
   </div>
 
+  <div class="section-title">Anzahl Pokémon</div>
+  <div class="genbox">
+    <label><input type="radio" name="size" value="12"><span>12</span></label>
+    <label><input type="radio" name="size" value="24" checked><span>24</span></label>
+    <label><input type="radio" name="size" value="36"><span>36</span></label>
+    <label><input type="radio" name="size" value="48"><span>48</span></label>
+  </div>
+
   <button onclick="startGame()">Start</button>
 </div>
 
 <div id="game" class="panel" style="display:none;">
-  <button onclick="back()">⬅ Neue Runde</button>
-  <div id="target" class="target"></div>
+  <div class="panel-top">
+    <button onclick="back()">⬅ Neue Runde</button>
+
+    <div class="zoom-group">
+      <button onclick="zoomIn()">➕</button>
+      <button onclick="zoomOut()">➖</button>
+    </div>
+  </div>
+
+  <!-- 🔥 ACTIVE RULE -->
+  <div id="activeRule" class="active-rule"></div>
+
+  <div id="target"></div>
   <div id="board" class="grid"></div>
 </div>
 
@@ -207,7 +76,14 @@ input, select {
 
 <div id="intro"><span id="introText"></span></div>
 
-<!-- POPUP -->
+<!-- RULE SCREEN -->
+<div id="rulesScreen">
+  <div class="rules-box">
+    <h2>⚠️ Sonderregel</h2>
+    <div id="rulesList"></div>
+  </div>
+</div>
+
 <div id="popup" onclick="closePopup()">
   <div class="popup-box" onclick="event.stopPropagation()">
     <img id="popImg">
@@ -215,72 +91,111 @@ input, select {
     <div id="popDex"></div>
     <div id="popTypes"></div>
     <div id="popEvo"></div>
-    <br>
-    <a id="popLink" target="_blank">PokéWiki</a>
-    <br><br>
     <button onclick="closePopup()">Schließen</button>
   </div>
 </div>
 
 <script>
+
 let seedValue=0;
 let holdTimer=null;
+let currentRule="";
+
+/* ZOOM */
+let tileSize = 90;
+function applyZoom(){
+  document.documentElement.style.setProperty("--tile-size", tileSize + "px");
+}
+function zoomIn(){ tileSize=Math.min(tileSize+20,220); applyZoom(); }
+function zoomOut(){ tileSize=Math.max(tileSize-20,60); applyZoom(); }
+
+/* RULES */
+const RULES = [
+  "Keine Fragen zu Entwicklungen",
+  "Keine Fragen zur Farbe",
+  "Keine Fragen zu Typen",
+  "Keine Fragen zur Größe",
+  "Keine Fragen zur Generation"
+];
+
+function getRandomRules(count=1){
+  let arr=[...RULES];
+  for(let i=arr.length-1;i>0;i--){
+    let j=Math.floor(rand()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr.slice(0,count);
+}
+
+async function showRulesScreen(rules){
+  const screen=document.getElementById("rulesScreen");
+  const list=document.getElementById("rulesList");
+
+  list.innerHTML=rules.map(r=>`<div>❌ ${r}</div>`).join("");
+
+  screen.classList.add("show");
+  await new Promise(r=>setTimeout(r,2000));
+  screen.classList.remove("show");
+}
+
+/* INTRO */
+async function playIntroAnimation(finalName, pool, lang){
+  const introEl = document.getElementById("intro");
+  const textEl = document.getElementById("introText");
+
+  introEl.classList.add("show");
+
+  for(let i=0;i<25;i++){
+    let p = pool[Math.floor(Math.random()*pool.length)];
+    textEl.innerText = lang==="de"?p.name_de:p.name_en;
+    await new Promise(r=>setTimeout(r,50));
+  }
+
+  for(let i=0;i<15;i++){
+    let useFinal = Math.random() < (i/15);
+    textEl.innerText = useFinal ? finalName :
+      (lang==="de"
+        ? pool[Math.floor(Math.random()*pool.length)].name_de
+        : pool[Math.floor(Math.random()*pool.length)].name_en);
+
+    await new Promise(r=>setTimeout(r,80+i*10));
+  }
+
+  textEl.innerText = finalName;
+
+  await new Promise(r=>setTimeout(r,600));
+  introEl.classList.add("hide");
+  await new Promise(r=>setTimeout(r,400));
+
+  introEl.classList.remove("show");
+  introEl.classList.remove("hide");
+}
 
 /* RNG */
-function hash(str){
-  let h=0;
-  for(let i=0;i<str.length;i++){
-    h=Math.imul(31,h)+str.charCodeAt(i)|0;
-  }
-  return h;
-}
+function hash(str){ let h=0; for(let i=0;i<str.length;i++){ h=Math.imul(31,h)+str.charCodeAt(i)|0;} return h;}
+function rand(){ seedValue+=0x6D2B79F5; let t=seedValue; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296;}
+function getGens(){ return Array.from(document.querySelectorAll(".genbox input:checked")).map(e=>parseInt(e.value));}
+function getSize(){ return parseInt(document.querySelector('input[name="size"]:checked').value);}
 
-function rand(){
-  seedValue+=0x6D2B79F5;
-  let t=seedValue;
-  t=Math.imul(t^t>>>15,t|1);
-  t^=t+Math.imul(t^t>>>7,t|61);
-  return ((t^t>>>14)>>>0)/4294967296;
-}
-
-function getGens(){
-  return Array.from(document.querySelectorAll(".genbox input:checked"))
-    .map(e=>parseInt(e.value));
-}
-
-/* Evolution */
-function getEvolutionChain(pokemon){
-  let chain=[pokemon];
-  let next=POKEMON.find(p=>p.id===pokemon.id+1 && p.gen===pokemon.gen);
-  if(next){
-    chain.push(next);
-    let next2=POKEMON.find(p=>p.id===next.id+1 && p.gen===pokemon.gen);
-    if(next2) chain.push(next2);
-  }
-  return chain;
-}
-
-/* Popup */
+/* POPUP */
 function showPopup(p){
-  document.getElementById("popup").style.display="flex";
-
+  popup.style.display="flex";
   popImg.src=p.img;
-  popName.innerText=p.name_de+" / "+p.name_en;
-  popDex.innerText="Dex: #"+p.id;
-  popTypes.innerText="Typ: "+(p.types||[]).join(", ");
-
-  let evo=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
-  popEvo.innerText="Entwicklung: "+evo;
-
-  popLink.href="https://www.pokewiki.de/"+p.name_de;
+  popName.innerText=p.name_de;
+  popDex.innerText="Dex #"+p.id;
+  popTypes.innerText=(p.types||[]).join(", ");
+  popEvo.innerText=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
 }
-
-function closePopup(){
-  document.getElementById("popup").style.display="none";
-}
+function closePopup(){ popup.style.display="none"; }
 
 /* START */
 async function startGame(){
+
+  if(typeof applyEvolutionData==="function"){
+    applyEvolutionData();
+  }
+
+  applyZoom();
 
   let lang=document.getElementById("lang").value;
   let seed=document.getElementById("seedInput").value;
@@ -295,38 +210,35 @@ async function startGame(){
     [pool[i],pool[j]]=[pool[j],pool[i]];
   }
 
-  let data=pool.slice(0,24);
+  let data=pool.slice(0,getSize());
 
   let targetPokemon=data[Math.abs(hash(seed+playerId))%data.length];
   let name=lang==="de"?targetPokemon.name_de:targetPokemon.name_en;
 
-  document.getElementById("menu").style.display="none";
+  menu.style.display="none";
 
-  introText.innerText=name;
-  intro.classList.add("show");
+  await playIntroAnimation(name, pool, lang);
 
-  await new Promise(r=>setTimeout(r,1200));
+  let rule=getRandomRules(1)[0];
+  currentRule=rule;
+  await showRulesScreen([rule]);
 
-  intro.classList.remove("show");
+  game.style.display="block";
 
-  document.getElementById("game").style.display="block";
-
-  let board=document.getElementById("board");
-  let targetDiv=document.getElementById("target");
+  document.getElementById("activeRule").innerText="⚠️ "+currentRule;
 
   board.innerHTML="";
 
-  data.forEach((p,i)=>{
-
-    let pname=lang==="de"?p.name_de:p.name_en;
-
+  data.forEach(p=>{
     let card=document.createElement("div");
     card.className="card";
 
-    card.innerHTML=`
-      <img src="${p.img}">
-      <div>${pname}</div>
-    `;
+    let shiny = rand() < 0.02;
+    let img=shiny?p.img.replace("/pokemon/","/pokemon/shiny/"):p.img;
+
+    card.dataset.shiny=shiny;
+
+    card.innerHTML=`<img src="${img}"><div>${p.name_de}</div>`;
 
     card.onclick=()=>card.classList.toggle("off");
 
@@ -338,18 +250,16 @@ async function startGame(){
     card.onmouseup=card.ontouchend=()=>clearTimeout(holdTimer);
 
     board.appendChild(card);
-
-    setTimeout(()=>card.classList.add("show"),i*30);
   });
 
-  targetDiv.innerText =
-    (lang==="de"?"Du bist: ":"You are: ") + name;
+  target.innerText="Du bist: "+name;
 }
 
 function back(){
-  document.getElementById("game").style.display="none";
-  document.getElementById("menu").style.display="block";
+  game.style.display="none";
+  menu.style.display="block";
 }
+
 </script>
 
 </body>
