@@ -20,7 +20,7 @@
 
   <div class="desc">
     Wähle deine Einstellungen und finde heraus, welches Pokémon du bist!<br>
-    Tippe, um Pokémon auszublenden – doppelt tippen für Infos.
+    Tippe zum Ausblenden – doppelt tippen für Infos.
   </div>
 
   <input id="seedInput" placeholder="Seed"><br>
@@ -179,9 +179,15 @@ function showPopup(p){
   popImg.src=p.img;
   popName.innerText=p.name_de;
   popDex.innerText="Dex #"+p.id;
-  popTypes.innerText=(p.types||[]).join(", ");
+
+  /* 🔥 FIXED TYPES */
+  popTypes.innerText = p.types && p.types.length
+    ? p.types.join(" • ")
+    : "❓ Unbekannt";
+
   popEvo.innerText=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
 }
+
 function closePopup(){ popup.style.display="none"; }
 
 /* START */
