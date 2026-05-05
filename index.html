@@ -20,7 +20,7 @@
 
   <div class="desc">
     Wähle deine Einstellungen und finde heraus, welches Pokémon du bist!<br>
-    Tippe, um Pokémon auszublenden – halte gedrückt für Infos.
+    Tippe, um Pokémon auszublenden – doppelt tippen für Infos.
   </div>
 
   <input id="seedInput" placeholder="Seed"><br>
@@ -95,7 +95,6 @@
 <script>
 
 let seedValue=0;
-let holdTimer=null;
 let currentRule="";
 
 /* ZOOM */
@@ -115,7 +114,7 @@ const RULES = [
   "Keine Fragen zur Generation"
 ];
 
-function getRandomRules(){
+function getRandomRule(){
   let arr=[...RULES];
   for(let i=arr.length-1;i>0;i--){
     let j=Math.floor(rand()*(i+1));
@@ -216,7 +215,7 @@ async function startGame(){
 
   await playIntroAnimation(name, pool, lang);
 
-  let rule=getRandomRules();
+  let rule=getRandomRule();
   currentRule=rule;
   await showRulesScreen(rule);
 
@@ -236,35 +235,23 @@ async function startGame(){
     card.dataset.shiny=shiny;
     card.innerHTML=`<img src="${img}"><div>${p.name_de}</div>`;
 
-    let isHolding = false;
+    let lastTap = 0;
 
     card.addEventListener("click", () => {
-      if(!isHolding){
-        card.classList.toggle("off");
+      const now = Date.now();
+      const diff = now - lastTap;
+
+      if(diff < 300){
+        showPopup(p);
+      } else {
+        setTimeout(() => {
+          if(Date.now() - lastTap >= 300){
+            card.classList.toggle("off");
+          }
+        }, 300);
       }
-      isHolding = false;
-    });
 
-    card.addEventListener("touchstart", () => {
-      isHolding = false;
-      holdTimer = setTimeout(() => {
-        isHolding = true;
-        showPopup(p);
-      }, 500);
-    });
-
-    card.addEventListener("touchend", () => {
-      clearTimeout(holdTimer);
-    });
-
-    card.addEventListener("mousedown", () => {
-      holdTimer = setTimeout(() => {
-        showPopup(p);
-      }, 500);
-    });
-
-    card.addEventListener("mouseup", () => {
-      clearTimeout(holdTimer);
+      lastTap = now;
     });
 
     board.appendChild(card);
