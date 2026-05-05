@@ -129,13 +129,35 @@ function rand(){ seedValue+=0x6D2B79F5; let t=seedValue; t=Math.imul(t^t>>>15,t|
 function getGens(){ return Array.from(document.querySelectorAll(".genbox input:checked")).map(e=>parseInt(e.value));}
 function getSize(){ return parseInt(document.querySelector('input[name="size"]:checked').value);}
 
+/* 🔥 TYPE FIX */
+const TYPE_MAP = {
+  Normal:"Normal",
+  Fire:"Feuer",
+  Water:"Wasser",
+  Grass:"Pflanze",
+  Electric:"Elektro",
+  Ice:"Eis",
+  Fighting:"Kampf",
+  Poison:"Gift",
+  Ground:"Boden",
+  Flying:"Flug",
+  Psychic:"Psycho",
+  Bug:"Käfer",
+  Rock:"Gestein",
+  Ghost:"Geist",
+  Dragon:"Drache",
+  Dark:"Unlicht",
+  Steel:"Stahl",
+  Fairy:"Fee"
+};
+
 /* POPUP */
 function showPopup(p){
   popup.style.display="flex";
   popImg.src=p.img;
   popName.innerText=p.name_de;
   popDex.innerText="Dex #"+p.id;
-  popTypes.innerText=(p.types||[]).join(", ");
+  popTypes.innerText=(p.types||[]).map(t=>TYPE_MAP[t]||t).join(", ");
   popEvo.innerText=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
 }
 function closePopup(){ popup.style.display="none"; }
@@ -180,12 +202,14 @@ async function startGame(){
     let card=document.createElement("div");
     card.className="card";
 
-    /* 🔥 ORIGINAL TYP LOGIK (NICHT ANGETASTET) */
     card.innerHTML=`
       <img src="${p.img}">
       <div>${p.name_de}</div>
       <div class="types">
-        ${(p.types||[]).map(t=>`<span class="type ${t}">${t}</span>`).join("")}
+        ${(p.types||[]).map(t=>{
+          let de = TYPE_MAP[t] || t;
+          return `<span class="type ${de}">${de}</span>`;
+        }).join("")}
       </div>
     `;
 
