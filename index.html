@@ -47,6 +47,8 @@
 
 <div id="game" class="panel" style="display:none;">
 
+  <button onclick="back()">⬅ Menü</button>
+
   <div id="target"></div>
   <div id="board" class="grid"></div>
 
@@ -58,26 +60,13 @@
 
 <script>
 
-/* TYPE MAP (EINZIGER FIX) */
+/* TYPE MAP (FIX) */
 const TYPE_MAP = {
-  Fire:"Feuer",
-  Water:"Wasser",
-  Grass:"Pflanze",
-  Electric:"Elektro",
-  Ice:"Eis",
-  Fighting:"Kampf",
-  Poison:"Gift",
-  Ground:"Boden",
-  Flying:"Flug",
-  Psychic:"Psycho",
-  Bug:"Käfer",
-  Rock:"Gestein",
-  Ghost:"Geist",
-  Dragon:"Drache",
-  Dark:"Unlicht",
-  Steel:"Stahl",
-  Fairy:"Fee",
-  Normal:"Normal"
+  Fire:"Feuer", Water:"Wasser", Grass:"Pflanze", Electric:"Elektro",
+  Ice:"Eis", Fighting:"Kampf", Poison:"Gift", Ground:"Boden",
+  Flying:"Flug", Psychic:"Psycho", Bug:"Käfer", Rock:"Gestein",
+  Ghost:"Geist", Dragon:"Drache", Dark:"Unlicht",
+  Steel:"Stahl", Fairy:"Fee", Normal:"Normal"
 };
 
 /* RNG */
@@ -111,18 +100,23 @@ async function startGame(){
 
   let pool=POKEMON.filter(p=>gens.includes(p.gen));
 
+  /* 🔥 WICHTIG: SHUFFLE (FIXT BISASAM PROBLEM) */
+  for(let i=pool.length-1;i>0;i--){
+    let j=Math.floor(rand()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
+
   let data=pool.slice(0,size);
 
-  let target=data[Math.abs(hash(seedInput.value+playerInput.value))%data.length];
+  let targetPokemon=data[Math.abs(hash(seedInput.value+playerInput.value))%data.length];
 
   menu.style.display="none";
 
-  await playIntro(target,pool);
+  await playIntro(targetPokemon,pool);
 
   game.style.display="block";
 
-  /* 🔥 WICHTIG */
-  target.innerText="Du bist: "+target.name_de;
+  target.innerText="Du bist: "+targetPokemon.name_de;
 
   board.innerHTML="";
 
@@ -142,28 +136,33 @@ async function startGame(){
       </div>
     `;
 
-    let lastTap=0;
+    /* 🔥 DOUBLE TAP FIX */
+    let lastTap = 0;
 
-    card.onclick=()=>{
-      let now=Date.now();
+    card.addEventListener("click", () => {
+      let now = Date.now();
 
-      if(now-lastTap<300){
+      if(now - lastTap < 300){
         alert(p.name_de);
       } else {
         setTimeout(()=>{
-          if(Date.now()-lastTap>=300){
+          if(Date.now() - lastTap >= 300){
             card.classList.toggle("off");
           }
         },300);
       }
 
-      lastTap=now;
-    };
+      lastTap = now;
+    });
 
     board.appendChild(card);
-
   });
 
+}
+
+function back(){
+  game.style.display="none";
+  menu.style.display="block";
 }
 
 </script>
