@@ -19,7 +19,6 @@
   <div class="title">Wer bin ich?</div>
 
   <div class="desc">
-    Wähle deine Einstellungen und finde heraus, welches Pokémon du bist!<br>
     Tippe zum Ausblenden – doppelt tippen für Infos.
   </div>
 
@@ -36,20 +35,12 @@
     <label><input type="checkbox" value="1" checked><span>Gen 1</span></label>
     <label><input type="checkbox" value="2" checked><span>Gen 2</span></label>
     <label><input type="checkbox" value="3" checked><span>Gen 3</span></label>
-    <label><input type="checkbox" value="4" checked><span>Gen 4</span></label>
-    <label><input type="checkbox" value="5" checked><span>Gen 5</span></label>
-    <label><input type="checkbox" value="6" checked><span>Gen 6</span></label>
-    <label><input type="checkbox" value="7" checked><span>Gen 7</span></label>
-    <label><input type="checkbox" value="8" checked><span>Gen 8</span></label>
-    <label><input type="checkbox" value="9" checked><span>Gen 9</span></label>
   </div>
 
   <div class="section-title">Anzahl Pokémon</div>
   <div class="genbox">
-    <label><input type="radio" name="size" value="12"><span>12</span></label>
     <label><input type="radio" name="size" value="24" checked><span>24</span></label>
     <label><input type="radio" name="size" value="36"><span>36</span></label>
-    <label><input type="radio" name="size" value="48"><span>48</span></label>
   </div>
 
   <button onclick="startGame()">Start</button>
@@ -102,69 +93,25 @@ let tileSize = 90;
 function applyZoom(){
   document.documentElement.style.setProperty("--tile-size", tileSize + "px");
 }
-function zoomIn(){ tileSize=Math.min(tileSize+20,220); applyZoom(); }
-function zoomOut(){ tileSize=Math.max(tileSize-20,60); applyZoom(); }
+function zoomIn(){ tileSize+=20; applyZoom(); }
+function zoomOut(){ tileSize-=20; applyZoom(); }
 
 /* RULES */
 const RULES = [
   "Keine Fragen zu Entwicklungen",
-  "Keine Fragen zur Farbe",
   "Keine Fragen zu Typen",
-  "Keine Fragen zur Größe",
-  "Keine Fragen zur Generation"
+  "Keine Fragen zur Farbe"
 ];
 
 function getRandomRule(){
-  let arr=[...RULES];
-  for(let i=arr.length-1;i>0;i--){
-    let j=Math.floor(rand()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-  return arr[0];
+  return RULES[Math.floor(rand()*RULES.length)];
 }
 
 async function showRulesScreen(rule){
-  const screen=document.getElementById("rulesScreen");
-  const list=document.getElementById("rulesList");
-
-  list.innerHTML=`<div>❌ ${rule}</div>`;
-
-  screen.classList.add("show");
+  rulesList.innerHTML=`❌ ${rule}`;
+  rulesScreen.classList.add("show");
   await new Promise(r=>setTimeout(r,2000));
-  screen.classList.remove("show");
-}
-
-/* INTRO */
-async function playIntroAnimation(finalName, pool, lang){
-  const introEl = document.getElementById("intro");
-  const textEl = document.getElementById("introText");
-
-  introEl.classList.add("show");
-
-  for(let i=0;i<25;i++){
-    let p = pool[Math.floor(Math.random()*pool.length)];
-    textEl.innerText = lang==="de"?p.name_de:p.name_en;
-    await new Promise(r=>setTimeout(r,50));
-  }
-
-  for(let i=0;i<15;i++){
-    let useFinal = Math.random() < (i/15);
-    textEl.innerText = useFinal ? finalName :
-      (lang==="de"
-        ? pool[Math.floor(Math.random()*pool.length)].name_de
-        : pool[Math.floor(Math.random()*pool.length)].name_en);
-
-    await new Promise(r=>setTimeout(r,80+i*10));
-  }
-
-  textEl.innerText = finalName;
-
-  await new Promise(r=>setTimeout(r,600));
-  introEl.classList.add("hide");
-  await new Promise(r=>setTimeout(r,400));
-
-  introEl.classList.remove("show");
-  introEl.classList.remove("hide");
+  rulesScreen.classList.remove("show");
 }
 
 /* RNG */
@@ -179,55 +126,35 @@ function showPopup(p){
   popImg.src=p.img;
   popName.innerText=p.name_de;
   popDex.innerText="Dex #"+p.id;
-
-  /* 🔥 FIXED TYPES */
-  popTypes.innerText = p.types && p.types.length
-    ? p.types.join(" • ")
-    : "❓ Unbekannt";
-
+  popTypes.innerText=p.types?.join(", ")||"Unbekannt";
   popEvo.innerText=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
 }
-
 function closePopup(){ popup.style.display="none"; }
 
 /* START */
 async function startGame(){
 
-  if(typeof applyEvolutionData==="function"){
-    applyEvolutionData();
-  }
-
   applyZoom();
 
-  let lang=document.getElementById("lang").value;
-  let seed=document.getElementById("seedInput").value;
-  let playerId=document.getElementById("playerInput").value || "player";
+  let seed=seedInput.value;
+  let playerId=playerInput.value||"player";
 
   seedValue=hash(seed||"random");
 
   let pool=POKEMON.filter(p=>getGens().includes(p.gen));
 
-  for(let i=pool.length-1;i>0;i--){
-    let j=Math.floor(rand()*(i+1));
-    [pool[i],pool[j]]=[pool[j],pool[i]];
-  }
-
   let data=pool.slice(0,getSize());
 
   let targetPokemon=data[Math.abs(hash(seed+playerId))%data.length];
-  let name=lang==="de"?targetPokemon.name_de:targetPokemon.name_en;
 
   menu.style.display="none";
-
-  await playIntroAnimation(name, pool, lang);
 
   let rule=getRandomRule();
   currentRule=rule;
   await showRulesScreen(rule);
 
   game.style.display="block";
-
-  document.getElementById("activeRule").innerText="⚠️ "+currentRule;
+  activeRule.innerText="⚠️ "+currentRule;
 
   board.innerHTML="";
 
@@ -235,35 +162,34 @@ async function startGame(){
     let card=document.createElement("div");
     card.className="card";
 
-    let shiny = rand() < 0.02;
-    let img=shiny?p.img.replace("/pokemon/","/pokemon/shiny/"):p.img;
+    card.innerHTML=`
+      <img src="${p.img}">
+      <div>${p.name_de}</div>
+      <div class="types">
+        ${(p.types||[]).map(t=>`<span class="type ${t.toLowerCase()}">${t}</span>`).join("")}
+      </div>
+    `;
 
-    card.dataset.shiny=shiny;
-    card.innerHTML=`<img src="${img}"><div>${p.name_de}</div>`;
+    let lastTap=0;
 
-    let lastTap = 0;
-
-    card.addEventListener("click", () => {
-      const now = Date.now();
-      const diff = now - lastTap;
-
-      if(diff < 300){
+    card.onclick=()=>{
+      let now=Date.now();
+      if(now-lastTap<300){
         showPopup(p);
       } else {
-        setTimeout(() => {
-          if(Date.now() - lastTap >= 300){
+        setTimeout(()=>{
+          if(Date.now()-lastTap>=300){
             card.classList.toggle("off");
           }
-        }, 300);
+        },300);
       }
-
-      lastTap = now;
-    });
+      lastTap=now;
+    };
 
     board.appendChild(card);
   });
 
-  target.innerText="Du bist: "+name;
+  target.innerText="Du bist: "+targetPokemon.name_de;
 }
 
 function back(){
