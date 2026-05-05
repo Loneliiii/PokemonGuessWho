@@ -65,9 +65,7 @@
     </div>
   </div>
 
-  <!-- 🔥 ACTIVE RULE -->
   <div id="activeRule" class="active-rule"></div>
-
   <div id="target"></div>
   <div id="board" class="grid"></div>
 </div>
@@ -76,7 +74,6 @@
 
 <div id="intro"><span id="introText"></span></div>
 
-<!-- RULE SCREEN -->
 <div id="rulesScreen">
   <div class="rules-box">
     <h2>⚠️ Sonderregel</h2>
@@ -118,20 +115,20 @@ const RULES = [
   "Keine Fragen zur Generation"
 ];
 
-function getRandomRules(count=1){
+function getRandomRules(){
   let arr=[...RULES];
   for(let i=arr.length-1;i>0;i--){
     let j=Math.floor(rand()*(i+1));
     [arr[i],arr[j]]=[arr[j],arr[i]];
   }
-  return arr.slice(0,count);
+  return arr[0];
 }
 
-async function showRulesScreen(rules){
+async function showRulesScreen(rule){
   const screen=document.getElementById("rulesScreen");
   const list=document.getElementById("rulesList");
 
-  list.innerHTML=rules.map(r=>`<div>❌ ${r}</div>`).join("");
+  list.innerHTML=`<div>❌ ${rule}</div>`;
 
   screen.classList.add("show");
   await new Promise(r=>setTimeout(r,2000));
@@ -219,9 +216,9 @@ async function startGame(){
 
   await playIntroAnimation(name, pool, lang);
 
-  let rule=getRandomRules(1)[0];
+  let rule=getRandomRules();
   currentRule=rule;
-  await showRulesScreen([rule]);
+  await showRulesScreen(rule);
 
   game.style.display="block";
 
@@ -237,17 +234,38 @@ async function startGame(){
     let img=shiny?p.img.replace("/pokemon/","/pokemon/shiny/"):p.img;
 
     card.dataset.shiny=shiny;
-
     card.innerHTML=`<img src="${img}"><div>${p.name_de}</div>`;
 
-    card.onclick=()=>card.classList.toggle("off");
+    let isHolding = false;
 
-    card.onmousedown=card.ontouchstart=(e)=>{
-      e.preventDefault();
-      holdTimer=setTimeout(()=>showPopup(p),500);
-    };
+    card.addEventListener("click", () => {
+      if(!isHolding){
+        card.classList.toggle("off");
+      }
+      isHolding = false;
+    });
 
-    card.onmouseup=card.ontouchend=()=>clearTimeout(holdTimer);
+    card.addEventListener("touchstart", () => {
+      isHolding = false;
+      holdTimer = setTimeout(() => {
+        isHolding = true;
+        showPopup(p);
+      }, 500);
+    });
+
+    card.addEventListener("touchend", () => {
+      clearTimeout(holdTimer);
+    });
+
+    card.addEventListener("mousedown", () => {
+      holdTimer = setTimeout(() => {
+        showPopup(p);
+      }, 500);
+    });
+
+    card.addEventListener("mouseup", () => {
+      clearTimeout(holdTimer);
+    });
 
     board.appendChild(card);
   });
