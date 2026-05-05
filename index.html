@@ -1,397 +1,353 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wer bin ich?</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon - Wer bin ich?</title>
+    
+    <script src="Pokemon_data.js"></script>
+    
+    <style>
+        :root {
+            --poke-blue: #3b4cca;
+            --poke-yellow: #ffcb05;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --input-border: #cccccc;
+            --target-bg: #d4edda;
+            --target-border: #28a745;
+            --shadow: rgba(0,0,0,0.1);
+        }
 
-<link rel="stylesheet" href="style.css">
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #f0f0f0;
+            --input-border: #444444;
+            --target-bg: #1b3320;
+            --target-border: #2ecc71;
+            --shadow: rgba(0,0,0,0.5);
+        }
 
-<script src="pokemon_data.js"></script>
-<script src="evolution.js"></script>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-<style>
-.container { width:100%; max-width:900px; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 20px;
+        }
 
-.panel {
-  background:rgba(22,27,34,0.9);
-  backdrop-filter: blur(10px);
-  padding:20px;
-  border-radius:16px;
-  text-align:center;
-}
+        h1 {
+            color: var(--poke-yellow);
+            -webkit-text-stroke: 1.5px var(--poke-blue);
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 0px var(--poke-blue);
+        }
 
-.title {
-  font-size:28px;
-  margin-bottom:10px;
-  background:linear-gradient(90deg,#58a6ff,#9b59ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
+        .dark-mode-toggle {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            border: 2px solid var(--poke-blue);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-weight: bold;
+        }
 
-/* 🔥 BUTTONS */
-button {
-  padding:10px 18px;
-  margin:5px;
-  border:none;
-  border-radius:999px;
-  background:linear-gradient(145deg,#58a6ff,#9b59ff);
-  color:black;
-  font-weight:bold;
-  font-size:14px;
-  cursor:pointer;
-  transition:0.2s;
-  box-shadow:0 4px 12px rgba(0,0,0,0.4);
-}
+        .setup-container {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px var(--shadow);
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
 
-button:hover {
-  transform:translateY(-2px) scale(1.03);
-  box-shadow:0 6px 18px rgba(88,166,255,0.6);
-}
+        .gen-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0 25px 0;
+        }
 
-button:active { transform:scale(0.95); }
+        .gen-btn {
+            padding: 10px 15px;
+            border: 2px solid var(--poke-blue);
+            background: transparent;
+            color: var(--text-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
 
-input, select {
-  width:90%;
-  max-width:320px;
-  padding:10px;
-  margin:8px;
-  border-radius:10px;
-  border:none;
-  background:#0d1117;
-  color:white;
-}
+        .gen-btn.active {
+            background: var(--poke-blue);
+            color: white;
+        }
 
-/* GEN BUTTONS */
-.genbox {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin-top:10px;
-}
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
 
-.genbox span {
-  display:inline-block;
-  padding:8px 14px;
-  border-radius:999px;
-  background:linear-gradient(145deg,#1f2937,#111827);
-  border:1px solid #30363d;
-  font-size:13px;
-  transition:0.2s;
-}
+        input {
+            padding: 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            width: 200px;
+            font-size: 1rem;
+        }
 
-.genbox span:hover {
-  transform:translateY(-2px);
-  box-shadow:0 4px 10px rgba(0,0,0,0.4);
-}
+        .start-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-.genbox input { display:none; }
+        #target-pokemon {
+            display: none;
+            background: var(--target-bg);
+            border: 3px solid var(--target-border);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
 
-.genbox input:checked + span {
-  background:linear-gradient(145deg,#58a6ff,#9b59ff);
-  color:black;
-  font-weight:bold;
-  box-shadow:0 0 10px rgba(88,166,255,0.6);
-}
+        #target-pokemon img { width: 120px; height: 120px; image-rendering: pixelated; }
 
-/* GRID */
-.grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(var(--tile-size,90px),1fr));
-  gap:12px;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1100px;
+        }
 
-.card {
-  background:#21262d;
-  padding:10px;
-  border-radius:12px;
-  cursor:pointer;
-  transform:scale(0);
-  opacity:0;
-  transition:0.3s;
-  text-align:center;
-  font-size:13px;
-}
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.3s, filter 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-.card.show { transform:scale(1); opacity:1; }
+        /* Hover-Effekt nur für Karten, die NICHT ausgegraut sind */
+        .card:not(.is-out):hover { 
+            transform: translateY(-5px); 
+            border-color: var(--poke-yellow); 
+        }
 
-.card img {
-  width:100%;
-  max-width:110px;
-  margin-bottom:6px;
-}
+        .card img { width: 90px; height: 90px; object-fit: contain; image-rendering: pixelated; }
 
-.card.off { opacity:0.3; transform:scale(0.9); }
+        .card .name { font-weight: bold; margin: 10px 0 5px 0; font-size: 1.1rem; }
 
-/* INTRO */
-#intro {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#0d1117;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:42px;
-  font-weight:bold;
-  opacity:0;
-  pointer-events:none;
-  z-index:999;
-}
+        .badge-container {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
 
-#intro.show { opacity:1; transition:0.3s; }
+        .badge {
+            font-size: 0.7rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
-/* POPUP */
-#popup {
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.8);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
+        .gen-label { 
+            font-size: 0.8rem; 
+            opacity: 0.8; 
+            margin-bottom: 3px; 
+            margin-top: auto; 
+            font-weight: bold;
+        }
 
-.popup-box {
-  background:#161b22;
-  padding:20px;
-  border-radius:16px;
-  max-width:320px;
-  text-align:center;
-}
-
-.popup-box img { width:96px; }
-.popup-box a { color:#58a6ff; }
-</style>
+        /* Ausgrauen beim Klicken - Ohne Klick-Blockade! */
+        .card.is-out {
+            filter: grayscale(100%);
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <div class="header">
+        <h1>Pokémon Wer bin ich?</h1>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓 Dark Mode</button>
+    </div>
 
-<div id="menu" class="panel">
-  <div class="title">Wer bin ich?</div>
+    <div class="setup-container">
+        <div style="font-weight: bold; margin-bottom: 10px;">Generationen auswählen:</div>
+        <div class="gen-selector" id="gen-selector"></div>
+        
+        <div class="controls-row">
+            <input type="text" id="lobby-id" placeholder="Gemeinsame Spiel-ID">
+            <button class="start-btn" onclick="initGame()">Feld generieren</button>
+        </div>
+    </div>
 
-  <input id="seedInput" placeholder="Seed"><br>
-  <input id="playerInput" placeholder="Dein Name"><br>
+    <div id="target-pokemon">
+        <div style="font-weight: bold; margin-bottom: 5px; color: var(--target-border)">DEIN ZIEL:</div>
+        <img id="target-img" src="" alt="">
+        <div id="target-name" style="font-size: 1.5rem; font-weight: bold;"></div>
+        <div id="target-details" style="font-size: 1rem; margin-top: 10px; line-height: 1.5;"></div>
+    </div>
 
-  <select id="lang">
-    <option value="de">Deutsch</option>
-    <option value="en">English</option>
-  </select>
+    <div id="game-board" class="grid"></div>
 
-  <div class="genbox">
-    <label><input type="checkbox" value="1" checked><span>Gen 1</span></label>
-    <label><input type="checkbox" value="2" checked><span>Gen 2</span></label>
-    <label><input type="checkbox" value="3" checked><span>Gen 3</span></label>
-    <label><input type="checkbox" value="4" checked><span>Gen 4</span></label>
-    <label><input type="checkbox" value="5" checked><span>Gen 5</span></label>
-    <label><input type="checkbox" value="6" checked><span>Gen 6</span></label>
-    <label><input type="checkbox" value="7" checked><span>Gen 7</span></label>
-    <label><input type="checkbox" value="8" checked><span>Gen 8</span></label>
-    <label><input type="checkbox" value="9" checked><span>Gen 9</span></label>
-  </div>
+    <script>
+        const TYPE_COLORS = {
+            fire: { name: 'Feuer', color: '#EE8130' }, grass: { name: 'Pflanze', color: '#7AC74C' },
+            water: { name: 'Wasser', color: '#6390F0' }, bug: { name: 'Käfer', color: '#A6B91A' }, 
+            normal: { name: 'Normal', color: '#A8A77A' }, poison: { name: 'Gift', color: '#A33EA1' },
+            electric: { name: 'Elektro', color: '#F7D02C' }, ground: { name: 'Boden', color: '#E2BF65' }, 
+            fairy: { name: 'Fee', color: '#D685AD' }, fighting: { name: 'Kampf', color: '#C22E28' },
+            psychic: { name: 'Psycho', color: '#F95587' }, rock: { name: 'Gestein', color: '#B6A136' }, 
+            ghost: { name: 'Geist', color: '#735797' }, ice: { name: 'Eis', color: '#96D9D6' },
+            dragon: { name: 'Drache', color: '#6F35FC' }, dark: { name: 'Unlicht', color: '#705746' }, 
+            steel: { name: 'Stahl', color: '#B7B7CE' }, flying: { name: 'Flug', color: '#A98FF3' }
+        };
 
-  <button onclick="startGame()">Start</button>
-</div>
+        let selectedGens = new Set([1]); 
 
-<div id="game" class="panel" style="display:none;">
-  <button onclick="back()">⬅ Neue Runde</button>
+        const genSelector = document.getElementById('gen-selector');
+        for (let i = 1; i <= 9; i++) {
+            const btn = document.createElement('button');
+            btn.className = `gen-btn ${selectedGens.has(i) ? 'active' : ''}`;
+            btn.innerText = `Gen ${i}`;
+            btn.onclick = () => {
+                if (selectedGens.has(i)) {
+                    if (selectedGens.size > 1) selectedGens.delete(i);
+                } else {
+                    selectedGens.add(i);
+                }
+                updateGenButtons();
+            };
+            genSelector.appendChild(btn);
+        }
 
-  <div>
-    <button onclick="zoomIn()">➕</button>
-    <button onclick="zoomOut()">➖</button>
-  </div>
+        function updateGenButtons() {
+            document.querySelectorAll('.gen-btn').forEach((btn, idx) => {
+                btn.className = `gen-btn ${selectedGens.has(idx + 1) ? 'active' : ''}`;
+            });
+        }
 
-  <div id="target" class="target"></div>
-  <div id="board" class="grid"></div>
-</div>
+        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 
-</div>
+        function seededRandom(seed) {
+            const x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
 
-<div id="intro"><span id="introText"></span></div>
+        function initGame() {
+            const lobbyId = document.getElementById('lobby-id').value.trim();
+            if (!lobbyId) return alert("Bitte Spiel-ID eingeben!");
 
-<!-- POPUP -->
-<div id="popup" onclick="closePopup()">
-  <div class="popup-box" onclick="event.stopPropagation()">
-    <img id="popImg">
-    <h3 id="popName"></h3>
-    <div id="popDex"></div>
-    <div id="popTypes"></div>
-    <div id="popEvo"></div>
-    <br>
-    <a id="popLink" target="_blank">PokéWiki</a>
-    <br><br>
-    <button onclick="closePopup()">Schließen</button>
-  </div>
-</div>
+            if (typeof POKEMON === 'undefined') {
+                return alert("Fehler: Pokemon_data.js nicht geladen.");
+            }
 
-<script>
+            const filteredPool = POKEMON.filter(p => selectedGens.has(p.gen));
+            
+            if (filteredPool.length < 24) {
+                return alert("Zu wenige Pokémon in dieser Auswahl (min. 24 benötigt)!");
+            }
 
-let seedValue=0;
-let holdTimer=null;
+            const board = document.getElementById('game-board');
+            board.innerHTML = "";
 
-/* INTRO (NEU) */
-async function playIntroAnimation(finalName, pool, lang){
+            let seedValue = 0;
+            for (let i = 0; i < lobbyId.length; i++) seedValue += lobbyId.charCodeAt(i);
 
-  const introEl = document.getElementById("intro");
-  const textEl = document.getElementById("introText");
+            let poolCopy = [...filteredPool];
+            let selection = [];
+            for (let i = 0; i < 24; i++) {
+                const r = seededRandom(seedValue + i);
+                const index = Math.floor(r * poolCopy.length);
+                selection.push(poolCopy[index]);
+                poolCopy.splice(index, 1);
+            }
 
-  introEl.classList.add("show");
+            const myTarget = selection[Math.floor(Math.random() * selection.length)];
+            
+            const targetDiv = document.getElementById('target-pokemon');
+            targetDiv.style.display = 'block';
+            document.getElementById('target-img').src = myTarget.img;
+            document.getElementById('target-name').innerText = myTarget.name_de;
+            
+            const targetTypes = myTarget.types.map(t => TYPE_COLORS[t]?.name || t).join(', ');
+            document.getElementById('target-details').innerHTML = 
+                `<strong>Typ:</strong> ${targetTypes} <br> 
+                 <strong>Gen:</strong> ${myTarget.gen}`;
 
-  for(let i=0;i<25;i++){
-    let randP = pool[Math.floor(Math.random()*pool.length)];
-    textEl.innerText = lang==="de"?randP.name_de:randP.name_en;
-    await new Promise(r=>setTimeout(r,50));
-  }
+            selection.forEach(poke => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const badgesHtml = poke.types.map(t => {
+                    const tInfo = TYPE_COLORS[t] || { name: t, color: '#777' };
+                    return `<span class="badge" style="background:${tInfo.color}">${tInfo.name}</span>`;
+                }).join('');
 
-  for(let i=0;i<15;i++){
-    let useFinal = Math.random() < (i/15);
+                card.innerHTML = `
+                    <img src="${poke.img}" alt="${poke.name_de}">
+                    <div class="name">${poke.name_de}</div>
+                    <div class="badge-container">${badgesHtml}</div>
+                    <div class="gen-label">Gen ${poke.gen}</div>
+                `;
+                
+                card.onclick = () => {
+                    // Der Timeout verhindert, dass sich Klicks überschneiden
+                    setTimeout(() => card.classList.toggle('is-out'), 50);
+                };
+                
+                board.appendChild(card);
+            });
 
-    if(useFinal){
-      textEl.innerText = finalName;
-    } else {
-      let randP = pool[Math.floor(Math.random()*pool.length)];
-      textEl.innerText = lang==="de"?randP.name_de:randP.name_en;
-    }
-
-    await new Promise(r=>setTimeout(r,80 + i*10));
-  }
-
-  textEl.innerText = finalName;
-  await new Promise(r=>setTimeout(r,900));
-
-  introEl.classList.remove("show");
-}
-
-/* ZOOM */
-let tileSize = 90;
-function applyZoom(){
-  document.documentElement.style.setProperty("--tile-size", tileSize + "px");
-}
-function zoomIn(){ tileSize=Math.min(tileSize+20,220); applyZoom(); }
-function zoomOut(){ tileSize=Math.max(tileSize-20,60); applyZoom(); }
-
-/* RNG */
-function hash(str){
-  let h=0;
-  for(let i=0;i<str.length;i++){
-    h=Math.imul(31,h)+str.charCodeAt(i)|0;
-  }
-  return h;
-}
-
-function rand(){
-  seedValue+=0x6D2B79F5;
-  let t=seedValue;
-  t=Math.imul(t^t>>>15,t|1);
-  t^=t+Math.imul(t^t>>>7,t|61);
-  return ((t^t>>>14)>>>0)/4294967296;
-}
-
-function getGens(){
-  return Array.from(document.querySelectorAll(".genbox input:checked"))
-    .map(e=>parseInt(e.value));
-}
-
-/* POPUP */
-function showPopup(p){
-  document.getElementById("popup").style.display="flex";
-
-  popImg.src=p.img;
-  popName.innerText=p.name_de+" / "+p.name_en;
-  popDex.innerText="Dex: #"+p.id;
-  popTypes.innerText="Typ: "+(p.types||[]).join(", ");
-
-  let evo=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
-  popEvo.innerText="Entwicklung: "+evo;
-
-  popLink.href="https://www.pokewiki.de/"+p.name_de;
-}
-
-function closePopup(){
-  document.getElementById("popup").style.display="none";
-}
-
-/* START */
-async function startGame(){
-
-  if(typeof applyEvolutionData === "function"){
-    applyEvolutionData();
-  }
-
-  applyZoom();
-
-  let lang=document.getElementById("lang").value;
-  let seed=document.getElementById("seedInput").value;
-  let playerId=document.getElementById("playerInput").value || "player";
-
-  seedValue=hash(seed||"random");
-
-  let pool=POKEMON.filter(p=>getGens().includes(p.gen));
-
-  for(let i=pool.length-1;i>0;i--){
-    let j=Math.floor(rand()*(i+1));
-    [pool[i],pool[j]]=[pool[j],pool[i]];
-  }
-
-  let data=pool.slice(0,24);
-
-  let targetPokemon=data[Math.abs(hash(seed+playerId))%data.length];
-  let name=lang==="de"?targetPokemon.name_de:targetPokemon.name_en;
-
-  document.getElementById("menu").style.display="none";
-
-  await playIntroAnimation(name, pool, lang);
-
-  document.getElementById("game").style.display="block";
-
-  let board=document.getElementById("board");
-  let targetDiv=document.getElementById("target");
-
-  board.innerHTML="";
-
-  data.forEach((p,i)=>{
-
-    let pname=lang==="de"?p.name_de:p.name_en;
-
-    let card=document.createElement("div");
-    card.className="card";
-
-    card.innerHTML=`
-      <img src="${p.img}">
-      <div>${pname}</div>
-    `;
-
-    card.onclick=()=>card.classList.toggle("off");
-
-    card.onmousedown=card.ontouchstart=(e)=>{
-      e.preventDefault();
-      holdTimer=setTimeout(()=>showPopup(p),500);
-    };
-
-    card.onmouseup=card.ontouchend=()=>clearTimeout(holdTimer);
-
-    board.appendChild(card);
-
-    setTimeout(()=>card.classList.add("show"),i*30);
-  });
-
-  targetDiv.innerText =
-    (lang==="de"?"Du bist: ":"You are: ") + name;
-}
-
-function back(){
-  document.getElementById("game").style.display="none";
-  document.getElementById("menu").style.display="block";
-}
-
-</script>
-
+            window.scrollTo({ top: targetDiv.offsetTop - 20, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
