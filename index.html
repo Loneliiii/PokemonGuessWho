@@ -35,12 +35,20 @@
     <label><input type="checkbox" value="1" checked><span>Gen 1</span></label>
     <label><input type="checkbox" value="2" checked><span>Gen 2</span></label>
     <label><input type="checkbox" value="3" checked><span>Gen 3</span></label>
+    <label><input type="checkbox" value="4" checked><span>Gen 4</span></label>
+    <label><input type="checkbox" value="5" checked><span>Gen 5</span></label>
+    <label><input type="checkbox" value="6" checked><span>Gen 6</span></label>
+    <label><input type="checkbox" value="7" checked><span>Gen 7</span></label>
+    <label><input type="checkbox" value="8" checked><span>Gen 8</span></label>
+    <label><input type="checkbox" value="9" checked><span>Gen 9</span></label>
   </div>
 
   <div class="section-title">Anzahl Pokémon</div>
   <div class="genbox">
+    <label><input type="radio" name="size" value="12"><span>12</span></label>
     <label><input type="radio" name="size" value="24" checked><span>24</span></label>
     <label><input type="radio" name="size" value="36"><span>36</span></label>
+    <label><input type="radio" name="size" value="48"><span>48</span></label>
   </div>
 
   <button onclick="startGame()">Start</button>
@@ -93,14 +101,15 @@ let tileSize = 90;
 function applyZoom(){
   document.documentElement.style.setProperty("--tile-size", tileSize + "px");
 }
-function zoomIn(){ tileSize+=20; applyZoom(); }
-function zoomOut(){ tileSize-=20; applyZoom(); }
+function zoomIn(){ tileSize=Math.min(tileSize+20,220); applyZoom(); }
+function zoomOut(){ tileSize=Math.max(tileSize-20,60); applyZoom(); }
 
 /* RULES */
 const RULES = [
   "Keine Fragen zu Entwicklungen",
   "Keine Fragen zu Typen",
-  "Keine Fragen zur Farbe"
+  "Keine Fragen zur Farbe",
+  "Keine Fragen zur Generation"
 ];
 
 function getRandomRule(){
@@ -120,19 +129,31 @@ function rand(){ seedValue+=0x6D2B79F5; let t=seedValue; t=Math.imul(t^t>>>15,t|
 function getGens(){ return Array.from(document.querySelectorAll(".genbox input:checked")).map(e=>parseInt(e.value));}
 function getSize(){ return parseInt(document.querySelector('input[name="size"]:checked').value);}
 
+/* TYPE NORMALIZER (🔥 WICHTIG) */
+function normalizeType(type){
+  return type.toLowerCase()
+    .replace("é","e")
+    .replace("♀","")
+    .replace("♂","");
+}
+
 /* POPUP */
 function showPopup(p){
   popup.style.display="flex";
   popImg.src=p.img;
   popName.innerText=p.name_de;
   popDex.innerText="Dex #"+p.id;
-  popTypes.innerText=p.types?.join(", ")||"Unbekannt";
+  popTypes.innerText=(p.types||[]).join(", ");
   popEvo.innerText=getEvolutionChain(p).map(e=>e.name_de).join(" → ");
 }
 function closePopup(){ popup.style.display="none"; }
 
 /* START */
 async function startGame(){
+
+  if(typeof applyEvolutionData==="function"){
+    applyEvolutionData();
+  }
 
   applyZoom();
 
@@ -142,6 +163,11 @@ async function startGame(){
   seedValue=hash(seed||"random");
 
   let pool=POKEMON.filter(p=>getGens().includes(p.gen));
+
+  for(let i=pool.length-1;i>0;i--){
+    let j=Math.floor(rand()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
 
   let data=pool.slice(0,getSize());
 
@@ -166,7 +192,10 @@ async function startGame(){
       <img src="${p.img}">
       <div>${p.name_de}</div>
       <div class="types">
-        ${(p.types||[]).map(t=>`<span class="type ${t.toLowerCase()}">${t}</span>`).join("")}
+        ${(p.types||[]).map(t=>{
+          let cls=normalizeType(t);
+          return `<span class="type ${cls}">${t}</span>`;
+        }).join("")}
       </div>
     `;
 
