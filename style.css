@@ -1,3 +1,4 @@
+
 /* 🌌 BACKGROUND */
 body {
   margin:0;
@@ -35,7 +36,7 @@ body {
     0 0 40px rgba(88,166,255,0.15),
     0 10px 30px rgba(0,0,0,0.6);
 
-  text-align:center; /* 🔥 FIX */
+  text-align:center;
 }
 
 /* 🎯 TITLE */
@@ -55,6 +56,7 @@ body {
   margin-bottom:12px;
 }
 
+/* SECTION */
 .section-title {
   margin-top:22px;
   margin-bottom:10px;
@@ -86,7 +88,7 @@ button:active {
   transform:scale(0.95);
 }
 
-/* 🔲 INPUT */
+/* INPUT */
 input, select {
   width:90%;
   max-width:320px;
@@ -101,7 +103,7 @@ input, select {
   color:white;
 }
 
-/* 🔘 GEN + SIZE */
+/* GEN BOX */
 .genbox {
   display:flex;
   flex-wrap:wrap;
@@ -132,7 +134,7 @@ input, select {
 /* 🎯 TOP BAR */
 #game .panel-top {
   display:flex;
-  justify-content:center; /* 🔥 FIX */
+  justify-content:center;
   align-items:center;
   gap:15px;
   margin-bottom:15px;
@@ -182,6 +184,7 @@ input, select {
   margin-bottom:6px;
 }
 
+/* ❌ DISABLED */
 .card.off {
   opacity:0.25;
   transform:scale(0.9);
@@ -192,6 +195,55 @@ input, select {
   box-shadow:
     0 0 10px gold,
     0 0 25px rgba(255,215,0,0.4);
+}
+
+/* 🎨 TYPES */
+.types {
+  margin-top:5px;
+}
+
+.type {
+  display:inline-block;
+  padding:3px 7px;
+  margin:2px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:bold;
+  color:white;
+}
+
+/* TYPE COLORS */
+.type.feuer { background:#f08030; }
+.type.wasser { background:#6890f0; }
+.type.pflanze { background:#78c850; }
+.type.elektro { background:#f8d030; color:black; }
+.type.normal { background:#a8a878; }
+.type.kampf { background:#c03028; }
+.type.flug { background:#a890f0; }
+.type.gift { background:#a040a0; }
+.type.boden { background:#e0c068; color:black; }
+.type.gestein { background:#b8a038; }
+.type.käfer { background:#a8b820; }
+.type.geist { background:#705898; }
+.type.stahl { background:#b8b8d0; color:black; }
+.type.eis { background:#98d8d8; color:black; }
+.type.drache { background:#7038f8; }
+.type.unlicht { background:#705848; }
+.type.fee { background:#ee99ac; color:black; }
+
+/* ⚠️ RULE DISPLAY */
+.active-rule {
+  margin:10px 0 15px;
+  padding:8px 14px;
+
+  border-radius:999px;
+  display:inline-block;
+
+  background:rgba(255,77,77,0.15);
+  color:#ff6b6b;
+
+  font-size:13px;
+  font-weight:bold;
 }
 
 /* 🎬 INTRO */
@@ -267,19 +319,9 @@ input, select {
   opacity:1;
 }
 
-/* 🔥 ACTIVE RULE */
-.active-rule {
-  margin:10px 0 15px;
-  padding:8px 14px;
-
-  border-radius:999px;
-  display:inline-block;
-
-  background:rgba(255,77,77,0.15);
-  color:#ff6b6b;
-
-  font-size:13px;
-  font-weight:bold;
+.rules-box h2 {
+  color:#ff4d4d;
+  margin-bottom:15px;
 }
 
 /* 🪟 POPUP */
